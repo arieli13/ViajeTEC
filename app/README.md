@@ -1,0 +1,1 @@
+Aplicación hecha en ReactNative
