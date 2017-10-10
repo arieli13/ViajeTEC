@@ -1,0 +1,29 @@
+{
+  "name": "restapi",
+  "version": "0.0.2",
+  "description": "REST API for SQL Server",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "later"
+  },
+  "keywords": [
+    "Node",
+    "Express",
+    "SQLServer"
+  ],
+  "author": "Pablo Ariel Eros",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.1",
+    "change-case": "^3.0.1",
+    "express": "^4.15.4",
+    "mssql": "^3.3.0",
+    "request": "^2.82.0",
+    "xml2js": "^0.4.19",
+    "xmltojson": "^1.3.5"
+  }
+}
