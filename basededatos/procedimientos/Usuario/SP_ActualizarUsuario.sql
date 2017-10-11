@@ -3,6 +3,8 @@
 -- Fecha: 22/09/2017
 -- Descripcion: Actualiza los datos de un usuario.
 -----------------------------------------------------------
+--USE ViajeTEC
+--DROP PROCEDURE dbo.SP_ActualizarUsuario
 CREATE PROCEDURE dbo.SP_ActualizarUsuario
 	@nombre_usuario varchar(15),
 	@nombre VARCHAR(10),
@@ -22,8 +24,6 @@ BEGIN
 	
 	DECLARE @id_usuario INT
 	
-	EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario = @nombre_usuario, @id_usuario = @id_usuario OUTPUT;
-	
 	SET @InicieTransaccion = 0
 	IF @@TRANCOUNT=0 BEGIN
 		SET @InicieTransaccion = 1
@@ -33,7 +33,7 @@ BEGIN
 	
 	BEGIN TRY
 		SET @CustomError = 2001
-		
+		EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario = @nombre_usuario, @id_usuario = @id_usuario OUTPUT;
 		UPDATE dbo.Usuario SET nombre = @nombre, apellido = @apellido, telefono = @telefono, correo = @correo, area = @area, estudiante = @estudiante WHERE id_usuario = @id_usuario;
 			
 		IF @InicieTransaccion=1 BEGIN

@@ -18,7 +18,7 @@ BEGIN
 	
 	DECLARE @id_usuario int
 	
-	SET @datos = LOWER(@datos)
+	SET @datos = '%'+LOWER(@datos)+'%'
 	
 	EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario, @id_usuario = @id_usuario OUTPUT;
 	
@@ -26,16 +26,15 @@ BEGIN
 	IF @@TRANCOUNT=0 BEGIN
 		SET @InicieTransaccion = 1
 		SET TRANSACTION ISOLATION LEVEL READ COMMITTED
-		BEGIN TRANSACTION		
 	END
 	
 	BEGIN TRY
 		SET @CustomError = 2001
 		
-		SELECT nombre_usuario, nombre, apellido, area, id_usuario as x FROM dbo.Usuario WHERE 
+		SELECT nombre_usuario, nombre, apellido, area, id_usuario FROM dbo.Usuario WHERE 
 		(@datos like ('%'+LOWER(nombre)+'%')  OR @datos LIKE ('%'+LOWER(apellido)+'%') OR @datos LIKE ('%'+LOWER(area)+'%')
 		or ('%'+LOWER(nombre)+'%') like @datos OR ('%'+LOWER(apellido)+'%') LIKE @datos  OR ('%'+LOWER(area)+'%') LIKE @datos)
-		AND (SELECT COUNT(1) FROM dbo.Bloqueado WHERE (id_usuario = @id_usuario and id_usuarioBloqueado = Usuario.id_usuario) or (id_usuario = Usuario.id_usuario and id_usuarioBloqueado = @id_usuario) )<1
+		AND (SELECT COUNT(1) FROM dbo.Bloqueado WHERE (Bloqueado.id_usuario = @id_usuario and Bloqueado.id_usuarioBloqueado = Usuario.id_usuario) or (Bloqueado.id_usuario = Usuario.id_usuario and Bloqueado.id_usuarioBloqueado = @id_usuario) )<1
 		AND Usuario.id_usuario <> @id_usuario ORDER BY nombre ASC;
 		
 	END TRY
@@ -44,10 +43,6 @@ BEGIN
 		SET @ErrorSeverity = ERROR_SEVERITY()
 		SET @ErrorState = ERROR_STATE()
 		SET @Message = ERROR_MESSAGE()
-		
-		IF @InicieTransaccion=1 BEGIN
-			ROLLBACK
-		END
 		RAISERROR('%s', 
 			@ErrorSeverity, @ErrorState, @Message, @CustomError)
 	END CATCH	

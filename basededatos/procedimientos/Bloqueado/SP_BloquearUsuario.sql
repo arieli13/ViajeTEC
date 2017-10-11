@@ -3,6 +3,8 @@
 -- Fecha: 19/09/2017
 -- Descripcion: Bloquea a un usuario.
 -----------------------------------------------------------
+--use ViajeTEC
+--DROP PROCEDURE dbo.SP_BloquearUsuario
 CREATE PROCEDURE dbo.SP_BloquearUsuario
 	@nombre_usuario_usuario varchar(15),
 	@nombre_usuario_bloqueado varchar(15)
@@ -20,9 +22,6 @@ BEGIN
 	DECLARE @id_usuario int
 	DECLARE @id_usuarioBloqueado int
 	
-	EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario_usuario, @id_usuario = @id_usuario OUTPUT;
-	EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario_bloqueado, @id_usuario = @id_usuarioBloqueado OUTPUT;
-	
 	SET @InicieTransaccion = 0
 	IF @@TRANCOUNT=0 BEGIN
 		SET @InicieTransaccion = 1
@@ -32,6 +31,9 @@ BEGIN
 	
 	BEGIN TRY
 		SET @CustomError = 2001
+		
+		EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario_usuario, @id_usuario = @id_usuario OUTPUT;
+		EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario_bloqueado, @id_usuario = @id_usuarioBloqueado OUTPUT;
 		
 		SET @esta_bloqueado = 
 		(

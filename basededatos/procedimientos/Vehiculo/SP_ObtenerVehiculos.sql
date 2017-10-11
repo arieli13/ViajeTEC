@@ -3,6 +3,8 @@
 -- Fecha: 19/09/2017
 -- Descripcion: Muestra todos los vehículos de un usuario
 -----------------------------------------------------------
+--use ViajeTEC
+--DROP PROCEDURE dbo.SP_ObtenerVehiculos
 CREATE PROCEDURE dbo.SP_ObtenerVehiculos
 	@nombre_usuario varchar(15)
 AS 
@@ -15,8 +17,6 @@ BEGIN
 	
 	DECLARE @id_usuario int
 	
-	EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario, @id_usuario = @id_usuario OUTPUT;
-
 	IF @@TRANCOUNT=0 BEGIN
 		SET TRANSACTION ISOLATION LEVEL READ COMMITTED		
 	END
@@ -24,6 +24,8 @@ BEGIN
 	BEGIN TRY
 		SET @CustomError = 2001
 		
+		EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario, @id_usuario = @id_usuario OUTPUT;
+
 		SELECT id_vehiculo, marca, placa, color FROM Vehiculo WHERE id_usuario = @id_usuario AND eliminado = 0;
 		
 	END TRY

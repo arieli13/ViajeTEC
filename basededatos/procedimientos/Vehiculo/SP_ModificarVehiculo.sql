@@ -3,6 +3,8 @@
 -- Fecha: 19/09/2017
 -- Descripcion: Modifica los datos de un vehículo en particular.
 -----------------------------------------------------------
+--USE ViajeTEC
+--DROP PROCEDURE dbo.SP_ModificarVehiculo
 CREATE PROCEDURE dbo.SP_ModificarVehiculo
 	@id_vehiculo INT,
 	@marca VARCHAR(12),
@@ -19,9 +21,6 @@ BEGIN
 	DECLARE @id_usuario INT
 	DECLARE @nombre_usuario VARCHAR(15)
 	
-	SET @id_usuario = (SELECT id_usuario FROM dbo.Vehiculo WHERE id_vehiculo = @id_vehiculo)
-	SET @nombre_usuario = (SELECT nombre_usuario FROM dbo.Usuario WHERE id_usuario = @id_usuario)
-	
 	SET @InicieTransaccion = 0
 	IF @@TRANCOUNT=0 BEGIN
 		SET @InicieTransaccion = 1
@@ -31,6 +30,9 @@ BEGIN
 	
 	BEGIN TRY
 		SET @CustomError = 2001
+		
+		SET @id_usuario = (SELECT id_usuario FROM dbo.Vehiculo WHERE id_vehiculo = @id_vehiculo)
+		SET @nombre_usuario = (SELECT nombre_usuario FROM dbo.Usuario WHERE id_usuario = @id_usuario)
 		
 		UPDATE dbo.Vehiculo 
 		SET marca = @marca, color = @color 

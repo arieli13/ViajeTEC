@@ -3,6 +3,8 @@
 -- Fecha: 19/09/2017
 -- Descripcion: Elimina a un favorito.
 -----------------------------------------------------------
+--use ViajeTEC
+--DROP PROCEDURE dbo.SP_EliminarFavorito
 CREATE PROCEDURE dbo.SP_EliminarFavorito
 	@nombre_usuario_usuario varchar(15),
 	@nombre_usuario_favorito varchar(15)
@@ -18,9 +20,6 @@ BEGIN
 	DECLARE @id_usuario int
 	DECLARE @id_usuarioFavorito int
 	
-	EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario_usuario, @id_usuario = @id_usuario OUTPUT;
-	EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario_favorito, @id_usuario = @id_usuarioFavorito OUTPUT;
-	
 	SET @InicieTransaccion = 0
 	IF @@TRANCOUNT=0 BEGIN
 		SET @InicieTransaccion = 1
@@ -31,17 +30,22 @@ BEGIN
 	BEGIN TRY
 		SET @CustomError = 2001
 		
+		EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario_usuario, @id_usuario = @id_usuario OUTPUT;
+		EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario_favorito, @id_usuario = @id_usuarioFavorito OUTPUT;
+		
 		DELETE FROM dbo.Favorito WHERE id_usuario = @id_usuario AND id_usuarioFavorito = @id_usuarioFavorito
 		
 		IF @@ROWCOUNT < 1
 			BEGIN
 				RAISERROR('El usuario no es favorito', 12, 1);
 			END
-		
-		IF @InicieTransaccion=1 BEGIN
-			COMMIT
-		END
-		EXEC SP_ObtenerFavoritos @nombre_usuario = @nombre_usuario_usuario; 
+		ELSE
+			BEGIN
+				IF @InicieTransaccion=1 BEGIN
+					COMMIT
+				END
+				EXEC SP_ObtenerFavoritos @nombre_usuario = @nombre_usuario_usuario; 
+			END
 	END TRY
 	BEGIN CATCH
 		SET @ErrorNumber = ERROR_NUMBER()

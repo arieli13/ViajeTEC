@@ -3,6 +3,8 @@
 -- Fecha: 20/09/2017
 -- Descripcion: Muestra todos los usuarios bloqueados de un usuario
 -----------------------------------------------------------
+--use ViajeTEC
+--DROP PROCEDURE dbo.SP_ObtenerBloqueados
 CREATE PROCEDURE dbo.SP_ObtenerBloqueados
 	@nombre_usuario varchar(15)
 AS 
@@ -14,8 +16,6 @@ BEGIN
 	DECLARE @Message VARCHAR(200)
 	
 	DECLARE @id_usuario int
-	
-	EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario, @id_usuario = @id_usuario OUTPUT;
 
 	IF @@TRANCOUNT=0 BEGIN
 		SET TRANSACTION ISOLATION LEVEL READ COMMITTED		
@@ -23,6 +23,8 @@ BEGIN
 	
 	BEGIN TRY
 		SET @CustomError = 2001
+		
+		EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario, @id_usuario = @id_usuario OUTPUT;
 		
 		SELECT nombre_usuario, nombre, apellido, area FROM Usuario WHERE id_usuario in (SELECT id_usuarioBloqueado FROM Bloqueado WHERE id_usuario = @id_usuario);
 		

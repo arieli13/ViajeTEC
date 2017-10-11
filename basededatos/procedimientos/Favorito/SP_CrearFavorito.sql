@@ -3,7 +3,8 @@
 -- Fecha: 19/09/2017
 -- Descripcion: Agrega un usuario como favorito, si ya lo es entonces no lo crea.
 -----------------------------------------------------------
-
+--use ViajeTEC
+--DROP PROCEDURE dbo.SP_CrearFavorito
 CREATE PROCEDURE dbo.SP_CrearFavorito
 	@nombre_usuario_usuario varchar(15),
 	@nombre_usuario_favorito varchar(15)
@@ -22,10 +23,6 @@ BEGIN
 	DECLARE @id_usuarioFavorito int
 	DECLARE @esta_Bloqueado int
 	
-	EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario_usuario, @id_usuario = @id_usuario OUTPUT;
-	EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario_favorito, @id_usuarioFavorito = @id_usuarioFavorito OUTPUT;
-	SET @esta_Bloqueado = (SELECT COUNT(1) FROM dbo.Bloqueado WHERE (id_usuario = @id_usuario AND id_usuarioBloqueado = @id_usuarioFavorito)OR(id_usuario = @id_usuarioFavorito AND id_usuarioBloqueado = @id_usuario))
-	
 	SET @InicieTransaccion = 0
 	IF @@TRANCOUNT=0 BEGIN
 		SET @InicieTransaccion = 1
@@ -35,6 +32,10 @@ BEGIN
 	
 	BEGIN TRY
 		SET @CustomError = 2001
+		
+		EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario_usuario, @id_usuario = @id_usuario OUTPUT;
+		EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario_favorito, @id_usuario = @id_usuarioFavorito OUTPUT;
+		SET @esta_Bloqueado = (SELECT COUNT(1) FROM dbo.Bloqueado WHERE (id_usuario = @id_usuario AND id_usuarioBloqueado = @id_usuarioFavorito)OR(id_usuario = @id_usuarioFavorito AND id_usuarioBloqueado = @id_usuario))
 		
 		SET @es_favorito = 
 		(

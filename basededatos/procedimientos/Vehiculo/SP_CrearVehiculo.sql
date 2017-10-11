@@ -3,6 +3,8 @@
 -- Fecha: 19/09/2017
 -- Descripcion: Crea un nuevo vehículo para un usuario. Si tiene más de 3, lanza un error indicando que no se pudo crear.
 -----------------------------------------------------------
+--use ViajeTEC
+--DROP PROCEDURE dbo.SP_CrearVehiculo
 CREATE PROCEDURE dbo.SP_CrearVehiculo
 	@nombre_usuario varchar(15),
 	@marca VARCHAR(12),
@@ -21,8 +23,6 @@ BEGIN
 	
 	DECLARE @id_usuario int 
 	
-	EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario, @id_usuario = @id_usuario OUTPUT;
-	
 	SET @InicieTransaccion = 0
 	IF @@TRANCOUNT=0 BEGIN
 		SET @InicieTransaccion = 1
@@ -32,6 +32,7 @@ BEGIN
 	
 	BEGIN TRY
 		SET @CustomError = 2001
+		EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario, @id_usuario = @id_usuario OUTPUT;
 		INSERT INTO dbo.Vehiculo (id_usuario, marca, placa, color) VALUES (@id_usuario, @marca, @placa, @color);
 		EXEC SP_ObtenerVehiculos @nombre_usuario = @nombre_usuario;
 		

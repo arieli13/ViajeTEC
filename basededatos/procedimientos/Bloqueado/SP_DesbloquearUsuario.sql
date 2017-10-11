@@ -3,23 +3,22 @@
 -- Fecha: 19/09/2017
 -- Descripcion: Desbloquea a un usuario.
 -----------------------------------------------------------
+--use ViajeTEC
+--DROP PROCEDURE dbo.SP_DesbloquearUsuario
 CREATE PROCEDURE dbo.SP_DesbloquearUsuario
 	@nombre_usuario_usuario varchar(15),
 	@nombre_usuario_bloqueado varchar(15)
 AS 
 BEGIN
 	
-	SET NOCOUNT OFF
+	SET NOCOUNT ON
 	
 	DECLARE @ErrorNumber INT, @ErrorSeverity INT, @ErrorState INT, @CustomError INT
 	DECLARE @Message VARCHAR(200)
 	DECLARE @InicieTransaccion BIT
 	
 	DECLARE @id_usuario int
-	DECLARE @id_bloqueado int
-	
-	EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario_usuario, @id_usuario = @id_usuario OUTPUT;
-	EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario_bloqueado, @id_usuario = @id_bloqueado OUTPUT;
+	DECLARE @id_usuarioBloqueado int
 	
 	SET @InicieTransaccion = 0
 	IF @@TRANCOUNT=0 BEGIN
@@ -31,7 +30,10 @@ BEGIN
 	BEGIN TRY
 		SET @CustomError = 2001
 		
-		DELETE FROM dbo.Bloqueado WHERE id_usuario = @id_usuario AND id_bloqueado = @id_bloqueado
+		EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario_usuario, @id_usuario = @id_usuario OUTPUT;
+		EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario_bloqueado, @id_usuario = @id_usuarioBloqueado OUTPUT;
+	
+		DELETE FROM dbo.Bloqueado WHERE id_usuario = @id_usuario AND id_usuarioBloqueado = @id_usuarioBloqueado
 		IF @@ROWCOUNT<0
 			BEGIN
 				RAISERROR('El usuario no está bloqueado', 12, 1);

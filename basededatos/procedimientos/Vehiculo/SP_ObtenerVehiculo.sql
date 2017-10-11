@@ -3,6 +3,8 @@
 -- Fecha: 19/09/2017
 -- Descripcion: Muestra todos los datos de un vehículo
 -----------------------------------------------------------
+--use ViajeTEC
+--DROP PROCEDURE dbo.SP_ObtenerVehiculo
 CREATE PROCEDURE dbo.SP_ObtenerVehiculo
 	@id_vehiculo INT
 AS 
