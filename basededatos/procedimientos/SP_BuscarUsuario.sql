@@ -3,6 +3,7 @@
 -- Fecha: 19/09/2017
 -- Descripcion: Busca usuarios que coincidan con el nombre pasado por parámetro
 -----------------------------------------------------------
+--use ViajeTEC
 --DROP PROCEDURE dbo.SP_BuscarUsuario
 CREATE PROCEDURE dbo.SP_BuscarUsuario
 	@nombre_usuario varchar(15),
@@ -18,7 +19,7 @@ BEGIN
 	
 	DECLARE @id_usuario int
 	
-	SET @datos = '%'+LOWER(@datos)+'%'
+	SET @datos = ('%'+LOWER(@datos)+'%')
 	
 	EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario, @id_usuario = @id_usuario OUTPUT;
 	
@@ -36,7 +37,7 @@ BEGIN
 		or ('%'+LOWER(nombre)+'%') like @datos OR ('%'+LOWER(apellido)+'%') LIKE @datos  OR ('%'+LOWER(area)+'%') LIKE @datos)
 		AND (SELECT COUNT(1) FROM dbo.Bloqueado WHERE (Bloqueado.id_usuario = @id_usuario and Bloqueado.id_usuarioBloqueado = Usuario.id_usuario) or (Bloqueado.id_usuario = Usuario.id_usuario and Bloqueado.id_usuarioBloqueado = @id_usuario) )<1
 		AND Usuario.id_usuario <> @id_usuario ORDER BY nombre ASC;
-		
+		                                                         
 	END TRY
 	BEGIN CATCH
 		SET @ErrorNumber = ERROR_NUMBER()

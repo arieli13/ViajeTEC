@@ -3,6 +3,7 @@
 -- Fecha: 21/09/2017
 -- Descripcion: Obtiene los datos de un usuario
 -----------------------------------------------------------
+--use ViajeTEC
 --DROP PROCEDURE dbo.SP_ObtenerUsuario
 CREATE PROCEDURE dbo.SP_ObtenerUsuario
 	@nombre_usuario varchar(15)

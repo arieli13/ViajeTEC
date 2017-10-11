@@ -166,6 +166,7 @@ create table Calificacion(
 	id_calificador int NOT NULL,
 	id_calificado int NOT NULL,
 	id_viajeHistorico bigint NOT NULL,
+	resultado tinyint NOT NULL,
 	PRIMARY KEY(id_calificacion),
 	FOREIGN KEY (id_calificador) REFERENCES Usuario(id_usuario),
 	FOREIGN KEY (id_calificado) REFERENCES Usuario(id_usuario),

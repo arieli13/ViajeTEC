@@ -11,8 +11,7 @@ CREATE PROCEDURE dbo.SP_ActualizarUsuario
 	@apellido VARCHAR(15),
 	@telefono VARCHAR(10),
 	@correo VARCHAR(200),
-	@area VARCHAR(60),
-	@estudiante BIT
+	@area VARCHAR(60)
 AS 
 BEGIN
 	
@@ -34,7 +33,7 @@ BEGIN
 	BEGIN TRY
 		SET @CustomError = 2001
 		EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario = @nombre_usuario, @id_usuario = @id_usuario OUTPUT;
-		UPDATE dbo.Usuario SET nombre = @nombre, apellido = @apellido, telefono = @telefono, correo = @correo, area = @area, estudiante = @estudiante WHERE id_usuario = @id_usuario;
+		UPDATE dbo.Usuario SET nombre = @nombre, apellido = @apellido, telefono = @telefono, correo = @correo, area = @area WHERE id_usuario = @id_usuario;
 			
 		IF @InicieTransaccion=1 BEGIN
 			COMMIT

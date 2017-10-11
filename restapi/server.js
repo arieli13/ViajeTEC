@@ -28,7 +28,7 @@ var sqlConfig = {
     user: "user",
     password: "123",
     server: "localhost\\MSSQLSERVER",
-    database: "RideDB",
+    database: "ViajeTEC",
     port: 1433
 };
 
@@ -47,12 +47,12 @@ async function existeUsuario (nombre_usuario){
           conexion.close();
       })
       .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
-          reject({error:error, descripcion:`No se puede saber si existe el usuario ${nombre_usuario}`, funcion:'existeUsuario'});
+          reject({error:error.message});
           conexion.close();
       });
     })
     .catch(function(error){ //Si la conexión falla, ejecuta esta función.
-      reject({error:error, descripcion:"No se ha podido conectar con la base de datos", funcion: "existeUsuario"});
+      reject({error:"No se ha podido conectar con la base de datos"});
       conexion.close();
     });
   });
@@ -70,30 +70,32 @@ async function obtenerUsuario(nombre_usuario){
           conexion.close();
       })
       .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
-          reject({error:error, descripcion:`No se pudieron obtener los datos del usuario ${nombre_usuario}`, funcion:'obtenerUsuario'});
+          reject({error:error.message});
           conexion.close();
       });
     })
     .catch(function(error){ //Si la conexión falla, ejecuta esta función.
-      reject({error:error, descripcion:"No se ha podido conectar con la base de datos", funcion: "obtenerUsuario"});
+      reject({error:"No se ha podido conectar con la base de datos"});
       conexion.close();
     });
   });
 }
-async function registrarUsuario(nombre_usuario, nombre, apellido, telefono, correo, area, tipo){
+async function registrarUsuario(nombre_usuario, nombre, apellido, telefono, correo, area, estudiante){
   return new Promise((resolve, reject)=>{
     var conexion = new sql.Connection(sqlConfig);//Se conecta a la base de datos.
     conexion.connect()
     .then(function() {  //En caso de conectarse exitosamente, ejecuta esta función.
       var request = new sql.Request(conexion); //Crea un nuevo request.
-      
+      var areaAux = area;
+      areaAux = areaAux.replace("ESCUELA DE", "");
+      areaAux = areaAux.replace("ESCUELA", "");
       request.input("nombre_usuario", sql.VarChar(15), nombre_usuario);
       request.input("nombre", sql.VarChar(10), changeCase.title(nombre));
       request.input("apellido", sql.VarChar(15), changeCase.title(apellido));
       request.input("telefono", sql.VarChar(10), telefono);
       request.input("correo", sql.VarChar(200), correo);
-      request.input("area", sql.VarChar(60), changeCase.title(area));
-      request.input("tipo", sql.Bit, tipo);
+      request.input("area", sql.VarChar(60), changeCase.title(areaAux));
+      request.input("estudiante", sql.Bit, estudiante);
 
       request.execute("SP_RegistrarUsuario")
       .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
@@ -101,12 +103,12 @@ async function registrarUsuario(nombre_usuario, nombre, apellido, telefono, corr
           conexion.close();
       })
       .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
-          reject({error:error, descripcion:`No se pudo registrar al usuario ${nombre_usuario}`, funcion:'registrarUsuario'});
+          reject({error:error.message});
           conexion.close();
       });
     })
     .catch(function(error){ //Si la conexión falla, ejecuta esta función.
-      reject({error:error, descripcion:"No se ha podido conectar con la base de datos", funcion: "registrarUsuario"});
+      reject({error:"No se ha podido conectar con la base de datos"});
       conexion.close();
     });
   });
@@ -123,14 +125,16 @@ async function actualizarUsuario(nombre_usuario, tipo_usuario){
     conexion.connect()
     .then(function() {  //En caso de conectarse exitosamente, ejecuta esta función.
       var request = new sql.Request(conexion); //Crea un nuevo request.
-      
+      var areaAux = datosActualizados.area;
+      areaAux = areaAux.replace("ESCUELA DE", "");
+      areaAux = areaAux.replace("ESCUELA", "");
+
       request.input("nombre_usuario", sql.VarChar(15), nombre_usuario);
       request.input("nombre", sql.VarChar(10), changeCase.title(datosActualizados.nombre));
       request.input("apellido", sql.VarChar(15), changeCase.title(datosActualizados.apellido));
       request.input("telefono", sql.VarChar(10), datosActualizados.telefono);
       request.input("correo", sql.VarChar(200), datosActualizados.correo);
-      request.input("area", sql.VarChar(60), changeCase.title(datosActualizados.area));
-      request.input("tipo", sql.Bit, tipo_usuario);
+      request.input("area", sql.VarChar(60), changeCase.title(areaAux));
 
       request.execute("SP_ActualizarUsuario")
       .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
@@ -138,12 +142,12 @@ async function actualizarUsuario(nombre_usuario, tipo_usuario){
           conexion.close();
       })
       .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
-          reject({error:error, descripcion:`No se pudo actualizar los datos del usuario ${nombre_usuario}`, funcion:'actualizarUsuario'});
+          reject({error:error.message});
           conexion.close();
       });
     })
     .catch(function(error){ //Si la conexión falla, ejecuta esta función.
-      reject({error:error, descripcion:"No se ha podido conectar con la base de datos", funcion: "actualizarUsuario"});
+      reject({error: "No se ha podido conectar con la base de datos"});
       conexion.close();
     });
   });
@@ -165,12 +169,12 @@ async function obtenerVehiculos(nombre_usuario){
           conexion.close();
       })
       .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
-          reject({error:error, descripcion:'No se pudieron obtener los vehiculos del usuario', funcion:'obtenerVehiculos'});
+          reject({error:error.message});
           conexion.close();
       });
     })
     .catch(function(error){ //Si la conexión falla, ejecuta esta función.
-      reject({error:error, descripcion:"No se ha podido conectar con la base de datos", funcion: "obtenerVehiculos"});
+      reject({error:"No se ha podido conectar con la base de datos"});
       conexion.close();
     });
   });
@@ -191,12 +195,12 @@ async function crearVehiculo(nombre_usuario, marca, placa, color){
         conexion.close();
       })
       .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
-        reject({error:error, descripcion:'No se pudo crear el vehículo', funcion:'crearVehiculoAux'});
+        reject({error:error.message});
         conexion.close();
       });
   })
   .catch(function(error){ //Si la conexión falla, ejecuta esta función.
-    reject({error:error, descripcion:"No se ha podido conectar con la base de datos", funcion: "crearVehiculoAux"});
+    reject({error:"No se ha podido conectar con la base de datos"});
     conexion.close();
   });
   });
@@ -209,7 +213,6 @@ async function modificarVehiculo(id_vehiculo, marca, placa, color){
       var request = new sql.Request(conexion); //Crea un nuevo request.
       request.input("id_vehiculo", sql.Int, id_vehiculo);
       request.input("marca", sql.VarChar(12), marca);
-      request.input("placa", sql.VarChar(8), placa);
       request.input("color", sql.VarChar(15), color);
       request.execute("SP_ModificarVehiculo") //Ejecuta el request.
       .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
@@ -217,12 +220,12 @@ async function modificarVehiculo(id_vehiculo, marca, placa, color){
         conexion.close();
       })
       .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
-        reject({error:error, descripcion:'No se pudo modificar el vehículo', funcion:'modificarVehiculo'});
+        reject({error:error.message});
         conexion.close();
       });
   })
   .catch(function(error){ //Si la conexión falla, ejecuta esta función.
-    reject({error:error, descripcion:"No se ha podido conectar con la base de datos", funcion: "modificarVehiculo"});
+    reject({error:"No se ha podido conectar con la base de datos"});
     conexion.close();
   });
   });
@@ -240,12 +243,12 @@ async function eliminarVehiculo(id_vehiculo){
         conexion.close();
       })
       .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
-        reject({error:error, descripcion:'No se pudo eliminar el vehículo', funcion:'eliminarVehiculo'});
+        reject({error:error.message});
         conexion.close();
       });
   })
   .catch(function(error){ //Si la conexión falla, ejecuta esta función.
-    reject({error:error, descripcion:"No se ha podido conectar con la base de datos", funcion: "eliminarVehiculo"});
+    reject({error:"No se ha podido conectar con la base de datos"});
     conexion.close();
   });
   });
@@ -266,12 +269,12 @@ async function obtenerFavoritos(nombre_usuario){
           conexion.close();
       })
       .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
-          reject({error:error, descripcion:'No se pudieron obtener los favoritos del usuario', funcion:'obtenerFavoritos'});
+          reject({error:error.message});
           conexion.close();
       });
     })
     .catch(function(error){ //Si la conexión falla, ejecuta esta función.
-      reject({error:error, descripcion:"No se ha podido conectar con la base de datos", funcion: "obtenerFavoritos"});
+      reject({error:"No se ha podido conectar con la base de datos"});
       conexion.close();
     });
   });
@@ -290,12 +293,12 @@ async function crearFavorito(nombre_usuario_usuario, nombre_usuario_favorito){
           conexion.close();
       })
       .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
-          reject({error:error, descripcion:`No se pudo agregar a ${nombre_usuario_favorito} a favoritos`, funcion:'crearFavorito'});
+          reject({error:error.message});
           conexion.close();
       });
     })
     .catch(function(error){ //Si la conexión falla, ejecuta esta función.
-      reject({error:error, descripcion:"No se ha podido conectar con la base de datos", funcion: "crearFavorito"});
+      reject({error:"No se ha podido conectar con la base de datos"});
       conexion.close();
     });
   });
@@ -314,12 +317,12 @@ async function eliminarFavorito(nombre_usuario_usuario, nombre_usuario_favorito)
           conexion.close();
       })
       .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
-          reject({error:error, descripcion:`No se pudo eliminar a ${nombre_usuario_favorito} de favoritos`, funcion:'eliminarFavorito'});
+          reject({error:error.message});
           conexion.close();
       });
     })
     .catch(function(error){ //Si la conexión falla, ejecuta esta función.
-      reject({error:error, descripcion:"No se ha podido conectar con la base de datos", funcion: "eliminarFavorito"});
+      reject({error: "No se ha podido conectar con la base de datos"});
       conexion.close();
     });
   });
@@ -340,12 +343,12 @@ async function obtenerBloqueados(nombre_usuario){
           conexion.close();
       })
       .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
-          reject({error:error, descripcion:'No se pudieron obtener los bloqueados del usuario', funcion:'obtenerBloqueados'});
+          reject({error:error.message});
           conexion.close();
       });
     })
     .catch(function(error){ //Si la conexión falla, ejecuta esta función.
-      reject({error:error, descripcion:"No se ha podido conectar con la base de datos", funcion: "obtenerBloqueados"});
+      reject({error:"No se ha podido conectar con la base de datos"});
       conexion.close();
     });
   });
@@ -364,12 +367,12 @@ async function bloquearUsuario(nombre_usuario_usuario, nombre_usuario_bloqueado)
           conexion.close();
       })
       .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
-          reject({error:error, descripcion:`No se pudo bloquear a ${nombre_usuario_bloqueado}`, funcion:'bloquearUsuario'});
+          reject({error:error.message});
           conexion.close();
       });
     })
     .catch(function(error){ //Si la conexión falla, ejecuta esta función.
-      reject({error:error, descripcion:"No se ha podido conectar con la base de datos", funcion: "bloquearUsuario"});
+      reject({error:"No se ha podido conectar con la base de datos"});
       conexion.close();
     });
   });
@@ -388,36 +391,37 @@ async function desbloquearUsuario(nombre_usuario_usuario, nombre_usuario_bloquea
           conexion.close();
       })
       .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
-          reject({error:error, descripcion:`No se pudo desbloquear a ${nombre_usuario_bloqueado}`, funcion:'desbloquearUsuario'});
+          reject({error:error.message});
           conexion.close();
       });
     })
     .catch(function(error){ //Si la conexión falla, ejecuta esta función.
-      reject({error:error, descripcion:"No se ha podido conectar con la base de datos", funcion: "desbloquearUsuario"});
+      reject({error:"No se ha podido conectar con la base de datos"});
       conexion.close();
     });
   });
 }
 
-async function obtenerUsuarios(nombre_usuario){ //Obtiene todos los usuarios, consultados por uno en específico
+async function buscarUsuario(nombre_usuario, datos){ //Obtiene todos los usuarios, consultados por uno en específico
   return new Promise((resolve, reject)=>{
     var conexion = new sql.Connection(sqlConfig);//Se conecta a la base de datos.
     conexion.connect()
     .then(function() {  //En caso de conectarse exitosamente, ejecuta esta función.
       var request = new sql.Request(conexion); //Crea un nuevo request.
       request.input("nombre_usuario", sql.VarChar(15), nombre_usuario);
-      request.execute("SP_ObtenerUsuarios")
+      request.input("datos", sql.VarChar(100), datos);
+      request.execute("SP_BuscarUsuario")
       .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
           resolve(result);
           conexion.close();
       })
       .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
-          reject({error:error, descripcion:'No se pudieron obtener los usuarios', funcion:'obtenerUsuarios'});
+          reject({error:error.message});
           conexion.close();
       });
     })
     .catch(function(error){ //Si la conexión falla, ejecuta esta función.
-      reject({error:error, descripcion:"No se ha podido conectar con la base de datos", funcion: "obtenerUsuarios"});
+      reject({error:"No se ha podido conectar con la base de datos"});
       conexion.close();
     });
   });
@@ -471,11 +475,11 @@ async function validarUsuario(nombre_usuario, pass){
     requestDatic.post(opciones,
       function(err, response, body){
         if(err){
-          reject({error: err, descripcion:'No se pudo conectar con el servidor en el DATIC.', funcion: "validarUsuarioAux"});
+          reject({error: 'No se pudo conectar con el servidor en el DATIC.'});
         }else{
           xml2js.parseString(body, function (err, result) {
             if(err){
-              reject({error: err, descripcion:'No se pudo convertir la respuesta XML a JSON.', funcion: "validarUsuarioAux"});
+              reject({error: 'No se pudo convertir la respuesta XML a JSON.'});
             }else{
               var valido = result['soap:Envelope']['soap:Body'][0]['ValidarUsuarioResponse'][0]['ValidarUsuarioResult'][0];
               if(valido === "true"){
@@ -511,11 +515,11 @@ async function tipoUsuario(nombre_usuario){
     requestDatic.post(opciones,
       function(err, response, body){
         if(err){
-          reject({error: err, descripcion:'No se pudo conectar con el servidor.', funcion: "tipoUsuarioAux"});
+          reject({error: 'No se pudo conectar con el servidor.'});
         }else{
           xml2js.parseString(body, function (err, result) {
             if(err){
-              reject({error: err, descripcion:'No se pudo convertir la respuesta XML a JSON.', funcion: "tipoUsuarioAux"});
+              reject({error: 'No se pudo convertir la respuesta XML a JSON.'});
             }else{
               var valido = "true";//result['soap:Envelope']['soap:Body'][0]['ValidarUsuarioResponse'][0]['ValidarUsuarioResult'][0];
               resolve(result['soap:Envelope']['soap:Body'][0]['TipoUsuarioResponse'][0]['TipoUsuarioResult'][0]);
@@ -547,11 +551,11 @@ async function datosEstudiante(nombre_usuario){
     requestDatic.post(opciones,
       function(err, response, body){
         if(err){
-          reject({error: err, descripcion:'No se pudo conectar con el servidor.', funcion: "datosEstudiante"});
+          reject({error: 'No se pudo conectar con el servidor.'});
         }else{
           xml2js.parseString(body, function (err, result) {
             if(err){
-              reject({error: err, descripcion:'No se pudo convertir la respuesta XML a JSON.', funcion: "datosEstudiante"});
+              reject({error: 'No se pudo convertir la respuesta XML a JSON.'});
             }else{
               var datos = result['soap:Envelope']['soap:Body'][0]['IESCDATOSESTUDIANTE_Buscar_ActivoSinMatriculaResponse'][0]['IESCDATOSESTUDIANTE_Buscar_ActivoSinMatriculaResult'][0]['diffgr:diffgram'][0]['NewDataSet'][0]['IESCDATOSESTUDIANTE'][0];
               var nombre = datos['NOM_ESTUDIANTE'][0].split(" ");
@@ -591,13 +595,14 @@ async function datosFuncionario(nombre_usuario){
     requestDatic.post(opciones,
       function(err, response, body){
         if(err){
-          reject({error: err, descripcion:'No se pudo conectar con el servidor.', funcion: "datosFuncionario"});
+          reject({error: 'No se pudo conectar con el servidor.'});
         }else{
           xml2js.parseString(body, function (err, result) {
             if(err){
-              reject({error: err, descripcion:'No se pudo convertir la respuesta XML a JSON.', funcion: "datosFuncionario"});
+              reject({error: 'No se pudo convertir la respuesta XML a JSON.'});
             }else{
               var datos = result['soap:Envelope']['soap:Body'][0]['BuscarFuncionarioResponse'][0]['BuscarFuncionarioResult'][0]['diffgr:diffgram'][0]['NewDataSet'][0]['MINISIF_Generica'][0];
+              
               var jDatos = {
                 nombre: changeCase.title(datos['DEnombre'][0]),
                 apellido: changeCase.title(datos['DEapellido1'][0]),
@@ -616,15 +621,17 @@ async function datosFuncionario(nombre_usuario){
 ////////////////////</WEB SERVICE DEL DATIC>
 
 async function login(nombre_usuario, pass){
-    /*var valido = await validarUsuario(nombre_usuario, pass);
+    var valido = await validarUsuario(nombre_usuario, pass);
     if(!valido){
       throw {error:'Usuario o contraseña inválidos', descripcion: 'El usuario o contraseña ingresados no son inválidos', funcion: 'login'};
-    }*/
+    }
+
     var existeEnBD = await existeUsuario(nombre_usuario);
     if(existeEnBD){
-      var datos = await cargarDatosIniciales(nombre_usuario);
+      var datos = await obtenerUsuario(nombre_usuario);
       return datos;
     }else{
+      //throw({error:"El usuario no existe"}); //ELIMINAR ESTA LÍNEA
       var tipo = await tipoUsuario(nombre_usuario);
       var datos;
       switch(tipo){
@@ -633,47 +640,41 @@ async function login(nombre_usuario, pass){
           var nuevoEstudiante = await registrarUsuario(nombre_usuario, datos.nombre, datos.apellido, datos.telefono, datos.correo, datos.area, true);
           nuevoEstudiante = nuevoEstudiante[0][0];
           return (
-            {
-              perfil: 
-              {
-                id: nuevoEstudiante.id,
+            [
+              [{
                 tipo: nuevoEstudiante.tipo,
                 nombre_usuario: nuevoEstudiante.nombre_usuario,
                 nombre: nuevoEstudiante.nombre,
                 apellido: nuevoEstudiante.apellido,
                 telefono: nuevoEstudiante.telefono,
                 correo: nuevoEstudiante.correo,
-                area: nuevoEstudiante.area
-              },
-              vehiculos: [],
-              favoritos: [],
-              bloqueados:[]
-            }
+                area: nuevoEstudiante.area,
+                estudiante: 1
+              }]
+            ]
           );
         case "2":
           datos = await datosFuncionario(nombre_usuario);
           var nuevoFuncionario = await registrarUsuario(nombre_usuario, datos.nombre, datos.apellido, datos.telefono, datos.correo, datos.area, false);
           nuevoFuncionario = nuevoFuncionario[0][0];
           return (
-            {
-              perfil: 
+            [
+              [
               {
-                id: nuevoFuncionario.id,
                 tipo: nuevoFuncionario.tipo,
                 nombre_usuario: nuevoFuncionario.nombre_usuario,
                 nombre: nuevoFuncionario.nombre,
                 apellido: nuevoFuncionario.apellido,
                 telefono: nuevoFuncionario.telefono,
                 correo: nuevoFuncionario.correo,
-                area: nuevoFuncionario.area
-              },
-              vehiculos: [],
-              favoritos: [],
-              bloqueados:[]
-            }
+                area: nuevoFuncionario.area,
+                estudiante: 0
+              }
+              ]
+            ]
           );
         default:
-          throw {error:'No es un tipo usuario válido', descripcion: 'El usuario y contraseñan están correctos, pero no es funcionario ni estudiante', funcion: 'login'};
+          throw {error: 'El usuario y contraseñan están correctos, pero no es funcionario ni estudiante'};
       }
     }
 }
@@ -682,9 +683,9 @@ app.post('/api/login', function (req, res) { //Retorna verdadero o falso, depend
   try{
     var datos = req.body;
     login(datos.nombre_usuario, datos.pass).then(function(result){
-      res.json(result);
+      res.json(result[0][0]);
     }).catch(function(error){
-      res.json(error);
+      res.json(error.error);
     });
   }catch(error){
     res.json(error);
@@ -700,7 +701,7 @@ app.get('/api/vehiculo/:nombre_usuario', function (req, res) { //Retorna todos l
     obtenerVehiculos(nombre_usuario).then(function(vehiculos) {
       res.json(vehiculos);
     }).catch(function(error){
-      res.json(error);
+      res.json(error.error);
     });
   }catch(error){
     res.json(error);
@@ -712,7 +713,7 @@ app.post('/api/vehiculo/', function (req, res) { //Crea un nuevo vehículo
     crearVehiculo(datos.nombre_usuario, datos.marca, datos.placa, datos.color).then(function(vehiculos) {
       res.json(vehiculos);
     }).catch(function(error){
-      res.json(error);
+      res.json(error.error);
     });
   }catch(error){
     res.json(error);
@@ -724,7 +725,7 @@ app.put('/api/vehiculo/', function (req, res) { //Modifica un nuevo vehículo
     modificarVehiculo(datos.id_vehiculo, datos.marca, datos.placa, datos.color).then(function(vehiculos) {
       res.json(vehiculos);
     }).catch(function(error){
-      res.json(error);
+      res.json(error.error);
     });
   }catch(error){
     res.json(error);
@@ -736,7 +737,7 @@ app.delete('/api/vehiculo/', function (req, res) { //Modifica un nuevo vehículo
     eliminarVehiculo(datos.id_vehiculo).then(function(vehiculos) {
       res.json(vehiculos);
     }).catch(function(error){
-      res.json(error);
+      res.json(error.error);
     });
   }catch(error){
     res.json(error);
@@ -750,7 +751,7 @@ app.get('/api/favorito/:nombre_usuario', function (req, res) { //Retorna todos l
     obtenerFavoritos(nombre_usuario).then(function(favoritos) {
       res.json(favoritos);
     }).catch(function(error){
-      res.json(error);
+      res.json(error.error);
     });
   }catch(error){
     res.json(error);
@@ -762,7 +763,7 @@ app.post('/api/favorito/', function (req, res) { //Agrega como favorito a un usu
     crearFavorito(datos.nombre_usuario_usuario, datos.nombre_usuario_favorito).then(function(favoritos) {
       res.json(favoritos);
     }).catch(function(error){
-      res.json(error);
+      res.json(error.error);
     });
   }catch(error){
     res.json(error);
@@ -774,7 +775,7 @@ app.delete('/api/favorito/', function (req, res) { //Quita como favorito a un us
     eliminarFavorito(datos.nombre_usuario_usuario, datos.nombre_usuario_favorito).then(function(favoritos) {
       res.json(favoritos);
     }).catch(function(error){
-      res.json(error);
+      res.json(error.error);
     });
   }catch(error){
     res.json(error);
@@ -788,7 +789,7 @@ app.get('/api/bloqueado/:nombre_usuario', function (req, res) { //Retorna todos 
     obtenerBloqueados(nombre_usuario).then(function(bloqueados) {
       res.json(bloqueados);
     }).catch(function(error){
-      res.json(error);
+      res.json(error.error);
     });
   }catch(error){
     res.json(error);
@@ -800,7 +801,7 @@ app.post('/api/bloqueado/', function (req, res) { //Bloquea a un usuario
     bloquearUsuario(datos.nombre_usuario_usuario, datos.nombre_usuario_bloqueado).then(function(bloqueados) {
       res.json(bloqueados);
     }).catch(function(error){
-      res.json(error);
+      res.json(error.error);
     });
   }catch(error){
     res.json(error);
@@ -812,7 +813,7 @@ app.delete('/api/bloqueado/', function (req, res) { //Desbloquea a un usuario
     desbloquearUsuario(datos.nombre_usuario_usuario, datos.nombre_usuario_bloqueado).then(function(bloqueados) {
       res.json(bloqueados);
     }).catch(function(error){
-      res.json(error);
+      res.json(error.error);
     });
   }catch(error){
     res.json(error);
@@ -820,26 +821,26 @@ app.delete('/api/bloqueado/', function (req, res) { //Desbloquea a un usuario
 });
 
 //USUARIO
-app.get('/api/usuario/:nombre_usuario', function (req, res) { //Retorna todos los usuarios bloqueados de un usuario
+app.get('/api/usuario/:nombre_usuario', function (req, res) { 
   try{
     var nombre_usuario = req.params.nombre_usuario;
     obtenerUsuario(nombre_usuario).then(function(usuario) {
       res.json(usuario);
     }).catch(function(error){
-      res.json(error);
+      res.json(error.error);
     });
   }catch(error){
     res.json(error);
   }
 });
-app.put('/api/usuario/', function (req, res) { //Retorna todos los usuarios bloqueados de un usuario
+app.put('/api/usuario/', function (req, res) { 
   try{
     var nombre_usuario = req.body.nombre_usuario;
-    var tipo_usuario = req.body.tipo_usuario;
-    actualizarUsuario(nombre_usuario, tipo_usuario).then(function(usuario) {
+    var estudiante = req.body.estudiante;
+    actualizarUsuario(nombre_usuario, estudiante).then(function(usuario) {
       res.json(usuario);
     }).catch(function(error){
-      res.json(error);
+      res.json(error.error);
     });
   }catch(error){
     res.json(error);
@@ -847,12 +848,13 @@ app.put('/api/usuario/', function (req, res) { //Retorna todos los usuarios bloq
 });
 
 //USUARIOS
-app.get('/api/usuarios/:nombre_usuario', function (req, res) { //Retorna todos los usuarios bloqueados de un usuario
+app.post('/api/buscarUsuario/', function (req, res) { //Retorna los resultados de los usuario que coincidan con los datos de búsqueda
   try{
-    obtenerUsuarios(req.params.nombre_usuario).then(function(usuario) {
-      res.json(usuario);
+    var datos = req.body;
+    buscarUsuario(datos.nombre_usuario, datos.datos).then(function(usuarios) {
+      res.json(usuarios[0]);
     }).catch(function(error){
-      res.json(error);
+      res.json(error.error);
     });
   }catch(error){
     res.json(error);
