@@ -1,15 +1,16 @@
 -----------------------------------------------------------
--- Autor: Eros Hernández
--- Fecha: 19/09/2017
--- Descripcion: Modifica los datos de un vehículo en particular.
+-- Autor: Jose Pablo Navarro
+-- Fecha: 22/09/2017
+-- Descripcion: Crea un punto destino de un viaje
 -----------------------------------------------------------
 --USE ViajeTEC
---DROP PROCEDURE dbo.SP_ModificarVehiculo
-CREATE PROCEDURE dbo.SP_ModificarVehiculo
-	@id_vehiculo INT,
-	@marca VARCHAR(12),
-	@placa VARCHAR(8),
-	@color VARCHAR(15)
+--DROP PROCEDURE dbo.SP_CrearPuntoReunion
+CREATE PROCEDURE dbo.SP_CrearPuntoReunion
+	@id_viaje int,
+	@latitud_punto decimal(12, 9),
+	@longitud_punto decimal (12, 9),
+	@nombre nvarchar (30)
+	
 AS 
 BEGIN
 	
@@ -18,9 +19,6 @@ BEGIN
 	DECLARE @ErrorNumber INT, @ErrorSeverity INT, @ErrorState INT, @CustomError INT
 	DECLARE @Message VARCHAR(200)
 	DECLARE @InicieTransaccion BIT
-	
-	DECLARE @id_usuario INT
-	DECLARE @nombre_usuario VARCHAR(15)
 	
 	SET @InicieTransaccion = 0
 	IF @@TRANCOUNT=0 BEGIN
@@ -32,17 +30,14 @@ BEGIN
 	BEGIN TRY
 		SET @CustomError = 2001
 		
-		SET @id_usuario = (SELECT id_usuario FROM dbo.Vehiculo WHERE id_vehiculo = @id_vehiculo)
-		SET @nombre_usuario = (SELECT nombre_usuario FROM dbo.Usuario WHERE id_usuario = @id_usuario)
+		insert into PuntoReunion (id_viaje, latitud_punto, longitud_punto, nombre) 
+		values (@id_viaje, @latitud_punto, @longitud_punto, @nombre);
 		
-		UPDATE dbo.Vehiculo 
-		SET marca = @marca, color = @color, placa = @placa
-		WHERE id_vehiculo = @id_vehiculo;
-		EXEC SP_ObtenerVehiculos @nombre_usuario = @nombre_usuario;
+		IF @InicieTransaccion = 1
+			BEGIN
+				COMMIT;
+			END
 		
-		IF @InicieTransaccion=1 BEGIN
-			COMMIT
-		END
 	END TRY
 	BEGIN CATCH
 		SET @ErrorNumber = ERROR_NUMBER()

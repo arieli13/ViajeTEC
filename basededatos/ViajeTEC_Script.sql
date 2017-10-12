@@ -66,7 +66,7 @@ create table Viaje(
 	precio int NOT NULL,
 	nombre_destino nvarchar(30) NOT NULL,
 	nombre_inicio nvarchar(30) NOT NULL,
-	hora_destino Time NOT NULL,
+	hora_destino Time,
 	PRIMARY KEY(id_viaje),
 	FOREIGN KEY (id_conductor) REFERENCES Usuario(id_usuario),
 	FOREIGN KEY (id_vehiculo) REFERENCES Vehiculo(id_vehiculo)
@@ -78,7 +78,7 @@ create table PuntoReunion(
 	latitud_punto decimal(12, 9) NOT NULL,
 	longitud_punto decimal(12, 9) NOT NULL,
 	nombre nvarchar(30) NOT NULL,
-	hora_estimada Time NOT NULL,
+	hora_estimada Time,
 	PRIMARY KEY(id_puntoReunion),
 	FOREIGN KEY (id_viaje) REFERENCES Viaje(id_viaje)
 );
@@ -108,7 +108,7 @@ create table ViajeHistorico(
 	precio int NOT NULL,
 	nombre_destino nvarchar(30) NOT NULL,
 	nombre_inicio nvarchar(30) NOT NULL,
-	hora_destino Time NOT NULL,
+	hora_destino Time,
 	PRIMARY KEY(id_viajeHistorico),
 	FOREIGN KEY (id_conductor) REFERENCES Usuario(id_usuario),
 	FOREIGN KEY (id_vehiculo) REFERENCES Vehiculo(id_vehiculo)
@@ -120,7 +120,7 @@ create table PuntoReunionHistorico(
 	latitud_punto decimal(12, 9) NOT NULL,
 	longitud_punto decimal(12, 9) NOT NULL,
 	nombre nvarchar(30) NOT NULL,
-	hora_estimada Time NOT NULL,
+	hora_estimada Time,
 	PRIMARY KEY(id_puntoReunionHistorico),
 	FOREIGN KEY (id_viajeHistorico) REFERENCES ViajeHistorico(id_viajeHistorico)
 );
@@ -156,7 +156,7 @@ create table PuntoReunionPredeterminado(
 	latitud_punto decimal(12, 9) NOT NULL,
 	longitud_punto decimal(12, 9) NOT NULL,
 	nombre nvarchar(30) NOT NULL,
-	hora_estimada Time NOT NULL,
+	hora_estimada Time,
 	PRIMARY KEY(id_puntoReunionPredeterminado),
 	FOREIGN KEY (id_viajePredeterminado) REFERENCES ViajePredeterminado(id_viajePredeterminado)
 );

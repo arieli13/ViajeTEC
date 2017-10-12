@@ -1,15 +1,12 @@
 -----------------------------------------------------------
--- Autor: Eros Hernández
--- Fecha: 19/09/2017
--- Descripcion: Modifica los datos de un vehículo en particular.
+-- Autor: Ariel Rodríguez
+-- Fecha: 22/09/2017
+-- Descripcion: Elimina un viaje
 -----------------------------------------------------------
 --USE ViajeTEC
---DROP PROCEDURE dbo.SP_ModificarVehiculo
-CREATE PROCEDURE dbo.SP_ModificarVehiculo
-	@id_vehiculo INT,
-	@marca VARCHAR(12),
-	@placa VARCHAR(8),
-	@color VARCHAR(15)
+--DROP PROCEDURE dbo.SP_EliminarViaje
+CREATE PROCEDURE dbo.SP_EliminarViaje
+	@id_viaje int
 AS 
 BEGIN
 	
@@ -18,9 +15,6 @@ BEGIN
 	DECLARE @ErrorNumber INT, @ErrorSeverity INT, @ErrorState INT, @CustomError INT
 	DECLARE @Message VARCHAR(200)
 	DECLARE @InicieTransaccion BIT
-	
-	DECLARE @id_usuario INT
-	DECLARE @nombre_usuario VARCHAR(15)
 	
 	SET @InicieTransaccion = 0
 	IF @@TRANCOUNT=0 BEGIN
@@ -32,17 +26,16 @@ BEGIN
 	BEGIN TRY
 		SET @CustomError = 2001
 		
-		SET @id_usuario = (SELECT id_usuario FROM dbo.Vehiculo WHERE id_vehiculo = @id_vehiculo)
-		SET @nombre_usuario = (SELECT nombre_usuario FROM dbo.Usuario WHERE id_usuario = @id_usuario)
+		DELETE FROM PasajeroViaje WHERE id_viaje = @id_viaje;
+		DELETE FROM PuntoReunion WHERE id_viaje = @id_viaje;
+		DELETE FROM Viaje WHERE id_viaje = @id_viaje;
 		
-		UPDATE dbo.Vehiculo 
-		SET marca = @marca, color = @color, placa = @placa
-		WHERE id_vehiculo = @id_vehiculo;
-		EXEC SP_ObtenerVehiculos @nombre_usuario = @nombre_usuario;
+		IF @InicieTransaccion = 1
+			BEGIN
+				COMMIT;
+			END
+			
 		
-		IF @InicieTransaccion=1 BEGIN
-			COMMIT
-		END
 	END TRY
 	BEGIN CATCH
 		SET @ErrorNumber = ERROR_NUMBER()

@@ -64,7 +64,7 @@ BEGIN
 			COMMIT
 		END
 		
-		SELECT nombre, apellido, telefono, area, @esFavorito as favorito, @rating as rating FROM Usuario where id_usuario = @id_usuario_consulta
+		SELECT nombre_usuario, nombre, correo, apellido, telefono, area, @esFavorito as favorito, @rating as rating FROM Usuario where id_usuario = @id_usuario_consulta
 	
 	END TRY
 	BEGIN CATCH

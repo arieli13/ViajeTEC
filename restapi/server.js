@@ -33,6 +33,119 @@ var sqlConfig = {
 };
 
 
+async function obtenerViajes(nombre_usuario){
+  return new Promise((resolve, reject)=>{
+    var conexion = new sql.Connection(sqlConfig);//Se conecta a la base de datos.
+    conexion.connect()
+    .then(function() {  //En caso de conectarse exitosamente, ejecuta esta función.
+      var request = new sql.Request(conexion); //Crea un nuevo request.
+      request.input("nombre_usuario", sql.VarChar(15), nombre_usuario);
+      request.execute("SP_ObtenerViajes")
+      .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
+          resolve(result);
+          conexion.close();
+      })
+      .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
+          reject({error:error.message});
+          conexion.close();
+      });
+    })
+    .catch(function(error){ //Si la conexión falla, ejecuta esta función.
+      reject({error:"No se ha podido conectar con la base de datos"});
+      conexion.close();
+    });
+  });
+}
+async function crearViaje(datos){
+  return new Promise((resolve, reject)=>{
+    var conexion = new sql.Connection(sqlConfig);//Se conecta a la base de datos.
+    conexion.connect()
+    .then(function() {  //En caso de conectarse exitosamente, ejecuta esta función.
+      var request = new sql.Request(conexion); //Crea un nuevo request.
+      request.input("nombre_usuario", sql.VarChar(15), datos.nombre_usuario);
+      request.input("id_vehiculo", sql.Int , datos.id_vehiculo);
+      request.input("latitud_destino", sql.Decimal(12,9) , datos.latitud_destino);
+      request.input("longitud_destino", sql.Decimal(12,9) , datos.longitud_destino);
+      request.input("nombre_destino", sql.NVarChar(30) , datos.nombre_destino);
+      request.input("latitud_inicio", sql.Decimal(12,9) , datos.latitud_inicio);
+      request.input("longitud_inicio", sql.Decimal(12,9) , datos.longitud_inicio);
+      request.input("nombre_inicio", sql.NVarChar(30) , datos.nombre_inicio);
+      request.input("fecha_hora_inicio", sql.NVarChar(20) , datos.fecha_hora_inicio);
+      request.input("camposDisponibles", sql.TinyInt , datos.camposDisponibles);
+      request.input("precio", sql.Int , datos.precio);
+      request.input("descripcion", sql.NVarChar(100) , datos.descripcion);
+      request.output("id_viaje", sql.Int);
+
+      request.execute("SP_CrearViaje")
+      .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
+          resolve(request.parameters.id_viaje.value);
+          conexion.close();
+      })
+      .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
+          reject({error:error.message});
+          conexion.close();
+      });
+    })
+    .catch(function(error){ //Si la conexión falla, ejecuta esta función.
+      reject({error:"No se ha podido conectar con la base de datos"});
+      conexion.close();
+    });
+  });
+}
+async function crearPuntoReunion(datos){
+  return new Promise((resolve, reject)=>{
+    var conexion = new sql.Connection(sqlConfig);//Se conecta a la base de datos.
+    conexion.connect()
+    .then(function() {  //En caso de conectarse exitosamente, ejecuta esta función.
+      var request = new sql.Request(conexion); //Crea un nuevo request.
+  
+      request.input("id_viaje", sql.Int , datos.id_viaje);
+      request.input("latitud_punto", sql.Decimal(12,9) , datos.latitud_punto);
+      request.input("longitud_punto", sql.Decimal(12,9) , datos.longitud_punto);
+      request.input("nombre", sql.NVarChar(30) , datos.nombre);
+
+      request.execute("SP_CrearPuntoReunion")
+      .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
+          resolve(result);
+          conexion.close();
+      })
+      .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
+          reject({error:error.message});
+          conexion.close();
+      });
+    })
+    .catch(function(error){ //Si la conexión falla, ejecuta esta función.
+      reject({error:"No se ha podido conectar con la base de datos"});
+      conexion.close();
+    });
+  });
+}
+async function eliminarViaje(id_viaje){
+  return new Promise((resolve, reject)=>{
+    var conexion = new sql.Connection(sqlConfig);//Se conecta a la base de datos.
+    conexion.connect()
+    .then(function() {  //En caso de conectarse exitosamente, ejecuta esta función.
+      var request = new sql.Request(conexion); //Crea un nuevo request.
+  
+      request.input("id_viaje", sql.Int , id_viaje);
+
+      request.execute("SP_EliminarViaje")
+      .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
+          resolve(result);
+          conexion.close();
+      })
+      .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
+          reject({error:error.message});
+          conexion.close();
+      });
+    })
+    .catch(function(error){ //Si la conexión falla, ejecuta esta función.
+      reject({error:"No se ha podido conectar con la base de datos"});
+      conexion.close();
+    });
+  });
+}
+
 async function existeUsuario (nombre_usuario){
   return new Promise((resolve, reject)=>{
     var conexion = new sql.Connection(sqlConfig);//Se conecta a la base de datos.
@@ -152,6 +265,31 @@ async function actualizarUsuario(nombre_usuario, tipo_usuario){
     });
   });
 }
+async function obtenerDatosUsuario(nombre_usuario, nombre_usuario_consulta){
+  return new Promise((resolve, reject)=>{
+    var conexion = new sql.Connection(sqlConfig);//Se conecta a la base de datos.
+    conexion.connect()
+    .then(function() {  //En caso de conectarse exitosamente, ejecuta esta función.
+      var request = new sql.Request(conexion); //Crea un nuevo request.
+      request.input("nombre_usuario", sql.VarChar(15), nombre_usuario);
+      request.input("nombre_usuario_consulta", sql.VarChar(15), nombre_usuario_consulta);
+
+      request.execute("SP_ObtenerDatosUsuario")
+      .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
+          resolve(result);
+          conexion.close();
+      })
+      .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
+          reject({error:error.message});
+          conexion.close();
+      });
+    })
+    .catch(function(error){ //Si la conexión falla, ejecuta esta función.
+      reject({error:"No se ha podido conectar con la base de datos"});
+      conexion.close();
+    });
+  });
+}
 
 
 
@@ -213,6 +351,7 @@ async function modificarVehiculo(id_vehiculo, marca, placa, color){
       var request = new sql.Request(conexion); //Crea un nuevo request.
       request.input("id_vehiculo", sql.Int, id_vehiculo);
       request.input("marca", sql.VarChar(12), marca);
+      request.input("placa", sql.VarChar(8), placa);
       request.input("color", sql.VarChar(15), color);
       request.execute("SP_ModificarVehiculo") //Ejecuta el request.
       .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
@@ -427,20 +566,27 @@ async function buscarUsuario(nombre_usuario, datos){ //Obtiene todos los usuario
   });
 }
 
-
-async function cargarDatosIniciales(nombre_usuario){ //Crea el JSON que tiene todos los datos del usuario: Perfil, vehículos, favoritos y bloqueados.
-  var perfil = await obtenerUsuario(nombre_usuario);
-  var vehiculos = await obtenerVehiculos(nombre_usuario);
-  var favoritos = await obtenerFavoritos(nombre_usuario);
-  var bloqueados = await obtenerBloqueados(nombre_usuario);
-
-  var datos = {
-    perfil: perfil[0][0],
-    vehiculos: vehiculos[0],
-    favoritos: favoritos[0],
-    bloqueados: bloqueados[0]
-  }
-  return datos;
+async function obtenerPrecioCombustible(){
+  return new Promise((resolve, reject)=>{
+    var conexion = new sql.Connection(sqlConfig);//Se conecta a la base de datos.
+    conexion.connect()
+    .then(function() {  //En caso de conectarse exitosamente, ejecuta esta función.
+      var request = new sql.Request(conexion); //Crea un nuevo request.
+      request.execute("SP_ObtenerPrecioCombustible")
+      .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
+          resolve(result);
+          conexion.close();
+      })
+      .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
+          reject({error:error.message});
+          conexion.close();
+      });
+    })
+    .catch(function(error){ //Si la conexión falla, ejecuta esta función.
+      reject({error:"No se ha podido conectar con la base de datos"});
+      conexion.close();
+    });
+  });
 }
 
 ////////////////////<WEB SERVICE DEL DATIC>
@@ -621,17 +767,17 @@ async function datosFuncionario(nombre_usuario){
 ////////////////////</WEB SERVICE DEL DATIC>
 
 async function login(nombre_usuario, pass){
-    var valido = await validarUsuario(nombre_usuario, pass);
+    /*var valido = await validarUsuario(nombre_usuario, pass);
     if(!valido){
       throw {error:'Usuario o contraseña inválidos', descripcion: 'El usuario o contraseña ingresados no son inválidos', funcion: 'login'};
-    }
+    }*/
 
     var existeEnBD = await existeUsuario(nombre_usuario);
     if(existeEnBD){
       var datos = await obtenerUsuario(nombre_usuario);
       return datos;
     }else{
-      //throw({error:"El usuario no existe"}); //ELIMINAR ESTA LÍNEA
+      throw({error:"El usuario no existe"}); //ELIMINAR ESTA LÍNEA
       var tipo = await tipoUsuario(nombre_usuario);
       var datos;
       switch(tipo){
@@ -685,7 +831,7 @@ app.post('/api/login', function (req, res) { //Retorna verdadero o falso, depend
     login(datos.nombre_usuario, datos.pass).then(function(result){
       res.json(result[0][0]);
     }).catch(function(error){
-      res.json(error.error);
+      res.json(error);
     });
   }catch(error){
     res.json(error);
@@ -699,9 +845,9 @@ app.get('/api/vehiculo/:nombre_usuario', function (req, res) { //Retorna todos l
   try{
     var nombre_usuario = req.params.nombre_usuario;
     obtenerVehiculos(nombre_usuario).then(function(vehiculos) {
-      res.json(vehiculos);
+      res.json(vehiculos[0]);
     }).catch(function(error){
-      res.json(error.error);
+      res.json(error);
     });
   }catch(error){
     res.json(error);
@@ -713,7 +859,7 @@ app.post('/api/vehiculo/', function (req, res) { //Crea un nuevo vehículo
     crearVehiculo(datos.nombre_usuario, datos.marca, datos.placa, datos.color).then(function(vehiculos) {
       res.json(vehiculos);
     }).catch(function(error){
-      res.json(error.error);
+      res.json(error);
     });
   }catch(error){
     res.json(error);
@@ -725,7 +871,7 @@ app.put('/api/vehiculo/', function (req, res) { //Modifica un nuevo vehículo
     modificarVehiculo(datos.id_vehiculo, datos.marca, datos.placa, datos.color).then(function(vehiculos) {
       res.json(vehiculos);
     }).catch(function(error){
-      res.json(error.error);
+      res.json(error);
     });
   }catch(error){
     res.json(error);
@@ -735,9 +881,9 @@ app.delete('/api/vehiculo/', function (req, res) { //Modifica un nuevo vehículo
   try{
     var datos = req.body;
     eliminarVehiculo(datos.id_vehiculo).then(function(vehiculos) {
-      res.json(vehiculos);
+      res.json(vehiculos[0]);
     }).catch(function(error){
-      res.json(error.error);
+      res.json(error);
     });
   }catch(error){
     res.json(error);
@@ -749,9 +895,9 @@ app.get('/api/favorito/:nombre_usuario', function (req, res) { //Retorna todos l
   try{
     var nombre_usuario = req.params.nombre_usuario;
     obtenerFavoritos(nombre_usuario).then(function(favoritos) {
-      res.json(favoritos);
+      res.json(favoritos[0]);
     }).catch(function(error){
-      res.json(error.error);
+      res.json(error);
     });
   }catch(error){
     res.json(error);
@@ -763,7 +909,7 @@ app.post('/api/favorito/', function (req, res) { //Agrega como favorito a un usu
     crearFavorito(datos.nombre_usuario_usuario, datos.nombre_usuario_favorito).then(function(favoritos) {
       res.json(favoritos);
     }).catch(function(error){
-      res.json(error.error);
+      res.json(error);
     });
   }catch(error){
     res.json(error);
@@ -775,7 +921,7 @@ app.delete('/api/favorito/', function (req, res) { //Quita como favorito a un us
     eliminarFavorito(datos.nombre_usuario_usuario, datos.nombre_usuario_favorito).then(function(favoritos) {
       res.json(favoritos);
     }).catch(function(error){
-      res.json(error.error);
+      res.json(error);
     });
   }catch(error){
     res.json(error);
@@ -787,9 +933,9 @@ app.get('/api/bloqueado/:nombre_usuario', function (req, res) { //Retorna todos 
   try{
     var nombre_usuario = req.params.nombre_usuario;
     obtenerBloqueados(nombre_usuario).then(function(bloqueados) {
-      res.json(bloqueados);
+      res.json(bloqueados[0]);
     }).catch(function(error){
-      res.json(error.error);
+      res.json(error);
     });
   }catch(error){
     res.json(error);
@@ -801,7 +947,7 @@ app.post('/api/bloqueado/', function (req, res) { //Bloquea a un usuario
     bloquearUsuario(datos.nombre_usuario_usuario, datos.nombre_usuario_bloqueado).then(function(bloqueados) {
       res.json(bloqueados);
     }).catch(function(error){
-      res.json(error.error);
+      res.json(error);
     });
   }catch(error){
     res.json(error);
@@ -813,7 +959,7 @@ app.delete('/api/bloqueado/', function (req, res) { //Desbloquea a un usuario
     desbloquearUsuario(datos.nombre_usuario_usuario, datos.nombre_usuario_bloqueado).then(function(bloqueados) {
       res.json(bloqueados);
     }).catch(function(error){
-      res.json(error.error);
+      res.json(error);
     });
   }catch(error){
     res.json(error);
@@ -827,7 +973,7 @@ app.get('/api/usuario/:nombre_usuario', function (req, res) {
     obtenerUsuario(nombre_usuario).then(function(usuario) {
       res.json(usuario);
     }).catch(function(error){
-      res.json(error.error);
+      res.json(error);
     });
   }catch(error){
     res.json(error);
@@ -840,21 +986,97 @@ app.put('/api/usuario/', function (req, res) {
     actualizarUsuario(nombre_usuario, estudiante).then(function(usuario) {
       res.json(usuario);
     }).catch(function(error){
-      res.json(error.error);
+      res.json(error);
     });
   }catch(error){
     res.json(error);
   }
 });
 
-//USUARIOS
-app.post('/api/buscarUsuario/', function (req, res) { //Retorna los resultados de los usuario que coincidan con los datos de búsqueda
+//CONSULTAS_USUARIO
+app.post('/api/buscarUsuario', function (req, res) { //Retorna los resultados de los usuario que coincidan con los datos de búsqueda
   try{
     var datos = req.body;
     buscarUsuario(datos.nombre_usuario, datos.datos).then(function(usuarios) {
       res.json(usuarios[0]);
     }).catch(function(error){
-      res.json(error.error);
+      res.json(error);
+    });
+  }catch(error){
+    res.json(error);
+  }
+});
+
+app.post('/api/obtenerDatosUsuario', function (req, res) {
+  try{
+    var datos = req.body;
+    obtenerDatosUsuario(datos.nombre_usuario, datos.nombre_usuario_consulta).then(function(usuario) {
+      res.json(usuario[0][0]);
+    }).catch(function(error){
+      res.json(error);
+    });
+  }catch(error){
+    res.json(error);
+  }
+});
+
+//COPMBUSTIBLE
+app.get('/api/combustible', function (req, res) {
+  try{
+    obtenerPrecioCombustible().then(function(usuario) {
+      res.json(usuario[0][0].precio);
+    }).catch(function(error){
+      res.json(error);
+    });
+  }catch(error){
+    res.json(error);
+  }
+});
+
+//VIAJE
+app.post('/api/viaje', function (req, res) {
+  try{
+    var datos = req.body;
+    crearViaje(datos).then(function(respuesta) {
+      res.json(respuesta);
+    }).catch(function(error){
+      res.json(error);
+    });
+  }catch(error){
+    res.json(error);
+  }
+});
+app.delete('/api/viaje/', function (req, res) {
+  try{
+    var datos = req.body;
+    eliminarViaje(datos.id_viaje).then(function(respuesta) {
+      res.json(respuesta);
+    }).catch(function(error){
+      res.json(error);
+    });
+  }catch(error){
+    res.json(error);
+  }
+});
+app.get('/api/viaje/:nombre_usuario', function (req, res) {
+  try{
+    obtenerViajes(req.params.nombre_usuario).then(function(viajes) {
+      res.json(viajes[0]);
+    }).catch(function(error){
+      res.json(error);
+    });
+  }catch(error){
+    res.json(error);
+  }
+});
+
+app.post('/api/puntoReunion', function (req, res) {
+  try{
+    var datos = req.body;
+    crearPuntoReunion(datos).then(function(respuesta) {
+      res.json(respuesta);
+    }).catch(function(error){
+      res.json(error);
     });
   }catch(error){
     res.json(error);

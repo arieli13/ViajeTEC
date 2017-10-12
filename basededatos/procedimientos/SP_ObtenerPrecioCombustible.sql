@@ -1,12 +1,11 @@
 -----------------------------------------------------------
 -- Autor: Ariel Rodríguez
--- Fecha: 19/09/2017
--- Descripcion: Muestra todos los vehículos de un usuario
+-- Fecha: 21/09/2017
+-- Descripcion: Obtiene el precio de la gasolina
 -----------------------------------------------------------
 --use ViajeTEC
---DROP PROCEDURE dbo.SP_ObtenerVehiculos
-CREATE PROCEDURE dbo.SP_ObtenerVehiculos
-	@nombre_usuario varchar(15)
+--DROP PROCEDURE dbo.SP_ObtenerPrecioCombustible
+CREATE PROCEDURE dbo.SP_ObtenerPrecioCombustible
 AS 
 BEGIN
 	
@@ -14,19 +13,12 @@ BEGIN
 	
 	DECLARE @ErrorNumber INT, @ErrorSeverity INT, @ErrorState INT, @CustomError INT
 	DECLARE @Message VARCHAR(200)
-	
-	DECLARE @id_usuario int
-	
-	IF @@TRANCOUNT=0 BEGIN
-		SET TRANSACTION ISOLATION LEVEL READ COMMITTED		
-	END
+	DECLARE @baneado bit
 	
 	BEGIN TRY
 		SET @CustomError = 2001
 		
-		EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario, @id_usuario = @id_usuario OUTPUT;
-
-		SELECT id_vehiculo, marca, placa, color FROM Vehiculo WHERE id_usuario = @id_usuario AND eliminado = 0 ORDER BY marca ASC;
+		SELECT top 1 precio FROM combustible WHERE fecha = (SELECT MAX(fecha) FROM Combustible)
 		
 	END TRY
 	BEGIN CATCH
@@ -34,10 +26,10 @@ BEGIN
 		SET @ErrorSeverity = ERROR_SEVERITY()
 		SET @ErrorState = ERROR_STATE()
 		SET @Message = ERROR_MESSAGE()
+		
 		RAISERROR('%s', 
 			@ErrorSeverity, @ErrorState, @Message, @CustomError)
 	END CATCH	
 END
 RETURN 0
 GO
-

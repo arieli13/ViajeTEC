@@ -1,11 +1,11 @@
 -----------------------------------------------------------
--- Autor: Eros Hernández
--- Fecha: 20/09/2017
--- Descripcion: Muestra todos los usuarios bloqueados de un usuario
+-- Autor: Ariel Rodríguez
+-- Fecha: 19/09/2017
+-- Descripcion: Muestra todos los viajes de un conductor
 -----------------------------------------------------------
 --use ViajeTEC
---DROP PROCEDURE dbo.SP_ObtenerBloqueados
-CREATE PROCEDURE dbo.SP_ObtenerBloqueados
+--DROP PROCEDURE dbo.SP_ObtenerViajes
+CREATE PROCEDURE dbo.SP_ObtenerViajes
 	@nombre_usuario varchar(15)
 AS 
 BEGIN
@@ -23,10 +23,9 @@ BEGIN
 	
 	BEGIN TRY
 		SET @CustomError = 2001
-		
 		EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario, @id_usuario = @id_usuario OUTPUT;
 		
-		SELECT nombre_usuario, nombre, apellido, area FROM Usuario WHERE id_usuario in (SELECT id_usuarioBloqueado FROM Bloqueado WHERE id_usuario = @id_usuario) order by nombre asc;
+		SELECT id_viaje, nombre_inicio, nombre_destino, CONVERT(VARCHAR, fecha_hora_inicio, 20) as fecha_hora_inicio FROM Viaje WHERE id_conductor = @id_usuario order by nombre_inicio ASC;
 		
 	END TRY
 	BEGIN CATCH

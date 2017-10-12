@@ -31,8 +31,8 @@ BEGIN
 	BEGIN TRY
 		SET @CustomError = 2001
 		
-		SET @id_usuario = (SELECT id_usuario FROM dbo.Vehiculo WHERE id_vehiculo = @id_vehiculo)
-		SET @nombre_usuario = (SELECT nombre_usuario FROM dbo.Usuario WHERE id_usuario = @id_usuario)
+		SELECT @id_usuario = id_usuario FROM dbo.Vehiculo WHERE id_vehiculo = @id_vehiculo
+		SELECT @nombre_usuario = nombre_usuario FROM dbo.Usuario WHERE id_usuario = @id_usuario
 		
 		SET @num_viajes = 
 		(
@@ -46,7 +46,7 @@ BEGIN
 		ELSE
 			BEGIN
 				UPDATE dbo.Vehiculo SET eliminado = 1 WHERE id_vehiculo = @id_vehiculo;
-				EXEC SP_ObtenerVehiculos @nombre_usuario = @nombre_usuario;
+				EXEC SP_ObtenerVehiculos @nombre_usuario;
 			END
 		IF @InicieTransaccion=1 BEGIN
 			COMMIT

@@ -24,7 +24,7 @@ BEGIN
 	BEGIN TRY
 		SET @CustomError = 2001
 		EXEC dbo.SP_ObtenerUsuarioId @nombre_usuario=@nombre_usuario, @id_usuario = @id_usuario OUTPUT;
-		SELECT estudiante, nombre_usuario, nombre, apellido, area FROM Usuario WHERE id_usuario in (SELECT id_usuarioFavorito FROM Favorito WHERE id_usuario = @id_usuario);
+		SELECT estudiante, nombre_usuario, nombre, apellido, area FROM Usuario WHERE id_usuario in (SELECT id_usuarioFavorito FROM Favorito WHERE Favorito.id_usuario = @id_usuario) ORDER BY nombre ASC;
 		
 	END TRY
 	BEGIN CATCH
