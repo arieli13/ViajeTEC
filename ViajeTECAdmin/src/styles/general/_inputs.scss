@@ -1,0 +1,17 @@
+.input {
+  &.full-width {
+    width: 100%;
+  }
+
+  &.one-half {
+    width: 49%;
+  }
+
+  &.one-third {
+    width: 32%;
+  }
+
+  &.two-thirds {
+    width: 64%;
+  }
+}

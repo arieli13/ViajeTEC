@@ -43,17 +43,29 @@
     }
 
     .link-container {
-      margin-top: 9em;
+      height: calc(100% - 13em);
+      width: calc(100% - 2.1em);
+      position: absolute;
+      overflow: auto;
+      top: 7em;
 
       .linkset {
-        margin-bottom: 3em;
+        margin-bottom: 2.5em;
 
         .title, .link {
+          margin-bottom: .2em;
+        }
+
+        .title {
           margin-bottom: .5em;
         }
 
+        &.last {
+          margin-bottom: 0;
+        }
+
         .link {
-          padding: .3em .5em .5em .5em;
+          padding: .2em .4em .4em .4em;
           border-radius: .2em;
           font-size: 1.3em;
           display: block;

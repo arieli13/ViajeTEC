@@ -5,7 +5,7 @@
         <h1 class="title">Viaje TEC</h1>
       </div>
       <div class="link-container">
-        <div class="linkset" *ngFor="let linkset of menuLinks">
+        <div class="linkset" [class.last]="isLast" *ngFor="let linkset of menuLinks; let isLast = last">
           <h3 class="title">{{ linkset.title }}</h3>
             <a class="link" [class.active]="active === link" *ngFor="let link of linkset.links" (click)="active = link">
               <mat-icon class="icon">{{ link.icon }}</mat-icon>
@@ -14,7 +14,9 @@
         </div>
       </div>
 
-      <h3 class="title logout">Log Out</h3>
+      <a routerLink="/">
+        <h3 class="title logout">Log Out</h3>
+      </a>
     </div>
   </div>
   <div class="col-xl-9 col-lg-9 col-md-8 content">
@@ -26,6 +28,7 @@
       <add-administrator *ngSwitchCase="'Add Administrator'"></add-administrator>
       <edit-administrator *ngSwitchCase="'Edit Administrator'"></edit-administrator>
       <remove-administrator *ngSwitchCase="'Remove Administrator'"></remove-administrator>
+      <fuel-settings *ngSwitchCase="'Fuel Prices'"></fuel-settings>
     </div>
   </div>
 </div>

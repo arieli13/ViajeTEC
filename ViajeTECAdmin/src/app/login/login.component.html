@@ -1,18 +1,22 @@
 <div class="login">
   <div class="row">
-    <div class="col-md-4">
-
+    <div class="col-md-5 jumbotron">
     </div>
-    <div class="col-md-8">
-      <h3>Login to ViajeTEC Admin</h3>
-      <mat-form-field>
-        <input matInput placeholder="Email" required>
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput placeholder="Password" required>
-      </mat-form-field>
+    <div class="col-md-7 login-container">
+      <div class="container">
+        <div class="input-container">
+          <h2 class="title">Login to ViajeTEC Admin</h2>
 
-      <button mat-raised-button routerLink="/dashboard">Login</button>
+          <mat-form-field class="input full-width">
+            <input matInput placeholder="Email" required>
+          </mat-form-field>
+          <mat-form-field class="input full-width">
+            <input matInput placeholder="Password" required>
+          </mat-form-field>
+
+          <button class="btn login" mat-raised-button routerLink="/dashboard" color="primary">Login</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

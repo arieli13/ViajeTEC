@@ -15,6 +15,7 @@ import { LoginComponent } from './login/login.component';
 import {
   DashboardComponent, ArchivedReport, ClosedReport, NewReport,
   AddAdministrator, EditAdministrator, RemoveAdministrator,
+  FuelSettings
 } from './dashboard'
 
 //APP SERVICES IMPORTS
@@ -25,9 +26,10 @@ import { AppService } from './services/app.service';
   declarations: [
     AppComponent,
 
-    LoginComponent, DashboardComponent,
-    ArchivedReport, ClosedReport, NewReport,
+    LoginComponent,
+    DashboardComponent, ArchivedReport, ClosedReport, NewReport,
     AddAdministrator, EditAdministrator, RemoveAdministrator,
+    FuelSettings,
 
   ],
   imports: [

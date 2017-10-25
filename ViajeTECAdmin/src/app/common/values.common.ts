@@ -15,5 +15,10 @@ export const menuLinks = [
       { title: 'Remove Administrator', icon: 'remove_circle' },
     ]
   },
-
+  {
+    title: 'App Settings',
+    links: [
+      { title: 'Fuel Prices', icon: 'settings' }
+    ]
+  }
 ]
