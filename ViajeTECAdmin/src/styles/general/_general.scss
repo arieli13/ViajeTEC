@@ -1,0 +1,21 @@
+html, body {
+  background-color: $background;
+  user-select: none;
+}
+
+a, input, p, h1, h2, h3, h4, h5, h6 {
+  font-weight: 400;
+}
+
+a, button, input {
+  text-decoration: none !important;
+}
+
+a, button {
+  cursor: pointer;
+}
+
+.row {
+  margin-right: 0;
+  margin-left: 0;
+}

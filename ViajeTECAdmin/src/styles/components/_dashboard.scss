@@ -1,0 +1,98 @@
+.dashboard {
+  .menu .container, .content .container {
+    min-height: calc(100vh - 2em);
+  }
+
+  .title, .link {
+    font-weight: 300;
+  }
+
+  .menu, .content {
+    padding: 1em;
+
+    .container {
+      border-left: .5em solid $blue;
+      background-color: white;
+      border-radius: .2em;
+      position: relative;
+      width: 100%;
+    }
+  }
+
+  .menu {
+    .linkset .title, .logout {
+      color: $darker-gray;
+    }
+
+    .title-container {
+      border-top-right-radius: .2em;
+      background-color: $blue;
+      position: absolute;
+      color: white;
+      display: table;
+      height: 7em;
+      width: 100%;
+      left: 0;
+      top: 0;
+
+      .title {
+        vertical-align: middle;
+        display: table-cell;
+        padding-left: 1em;
+      }
+    }
+
+    .link-container {
+      height: calc(100% - 13em);
+      width: calc(100% - 2.1em);
+      position: absolute;
+      overflow: auto;
+      top: 7em;
+
+      .linkset {
+        margin-bottom: 2.5em;
+
+        .title, .link {
+          margin-bottom: .2em;
+        }
+
+        .title {
+          margin-bottom: .5em;
+        }
+
+        &.last {
+          margin-bottom: 0;
+        }
+
+        .link {
+          padding: .2em .4em .4em .4em;
+          border-radius: .2em;
+          font-size: 1.3em;
+          display: block;
+          color: $blue;
+
+          .icon {
+            position: relative;
+            margin-right: .5em;
+            top: .2em;
+          }
+
+          &:hover {
+            background-color: $background;
+            transition: .125s ease-in;
+          }
+
+          &.active {
+            color: white !important;
+            background-color: $blue;
+          }
+        }
+      }
+    }
+
+    .logout {
+      position: absolute;
+      bottom: 1em;
+    }
+  }
+}

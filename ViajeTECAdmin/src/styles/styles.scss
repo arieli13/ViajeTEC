@@ -1,0 +1,13 @@
+//APP THEME
+@import './general/theme';
+
+//GENERAL ITEMS
+@import './general/buttons';
+@import './general/colors';
+@import './general/general';
+@import './general/mixins';
+@import './general/inputs';
+
+//COMPONENTS
+@import './components/dashboard';
+@import './components/login';

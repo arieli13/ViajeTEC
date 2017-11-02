@@ -1,0 +1,108 @@
+@import '~@angular/material/theming';
+@include mat-core();
+
+$mat-pantone-red: (
+  50 : #fde8e7,
+  100 : #fac6c2,
+  200 : #f7a09a,
+  300 : #f47971,
+  400 : #f15d52,
+  500 : #ef4034,
+  600 : #ed3a2f,
+  700 : #eb3227,
+  800 : #e82a21,
+  900 : #e41c15,
+  A100 : #ffffff,
+  A200 : #ffe1e0,
+  A400 : #ffb0ad,
+  A700 : #ff9794,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+$mat-pantone-blue: (
+  50 : #e4e6ec,
+  100 : #bcc1cf,
+  200 : #8f97af,
+  300 : #626d8f,
+  400 : #414e77,
+  500 : #1f2f5f,
+  600 : #1b2a57,
+  700 : #17234d,
+  800 : #121d43,
+  900 : #0a1232,
+  A100 : #6d84ff,
+  A200 : #3a59ff,
+  A400 : #072eff,
+  A700 : #0025ec,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: white,
+    400: white,
+    500: $white-87-opacity,
+    600: $white-87-opacity,
+    700: $white-87-opacity,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: $white-87-opacity,
+  )
+);
+
+$mat-pantone-orange: (
+  50 : #fff5e7,
+  100 : #ffe7c4,
+  200 : #ffd79c,
+  300 : #ffc674,
+  400 : #ffba57,
+  500 : #ffae39,
+  600 : #ffa733,
+  700 : #ff9d2c,
+  800 : #ff9424,
+  900 : #ff8417,
+  A100 : #ffffff,
+  A200 : #fffefc,
+  A400 : #ffe1c9,
+  A700 : #ffd2b0,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: white,
+    400: white,
+    500: $white-87-opacity,
+    600: $white-87-opacity,
+    700: $white-87-opacity,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: $white-87-opacity,
+  )
+);
+
+$app-primary: mat-palette($mat-pantone-blue);
+$app-accent:  mat-palette($mat-pantone-red);
+$app-warn:    mat-palette($mat-pantone-orange);
+
+$app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
+@include angular-material-theme($app-theme);
