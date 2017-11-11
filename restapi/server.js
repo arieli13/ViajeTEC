@@ -26,12 +26,11 @@ var server = app.listen  (process.env.PORT || 8080, function () {
 
 var sqlConfig = {
     user: "user",
-    password: "123",
-    server: "localhost\\MSSQLSERVER",
+    password: "1234",
+    server: "192.168.1.136",
     database: "ViajeTEC",
     port: 1433
 };
-
 
 async function obtenerViajes(nombre_usuario){
   return new Promise((resolve, reject)=>{
@@ -56,13 +55,36 @@ async function obtenerViajes(nombre_usuario){
     });
   });
 }
+async function obtenerViajesPendientes(nombre_usuario){
+  return new Promise((resolve, reject)=>{
+    var conexion = new sql.Connection(sqlConfig);//Se conecta a la base de datos.
+    conexion.connect()
+    .then(function() {  //En caso de conectarse exitosamente, ejecuta esta función.
+      var request = new sql.Request(conexion); //Crea un nuevo request.
+      request.input("nombre_usuario", sql.VarChar(15), nombre_usuario);
+      request.execute("SP_ObtenerViajesPendientes")
+      .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
+          resolve(result);
+          conexion.close();
+      })
+      .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
+          reject({error:error.message});
+          conexion.close();
+      });
+    })
+    .catch(function(error){ //Si la conexión falla, ejecuta esta función.
+      reject({error:"No se ha podido conectar con la base de datos"});
+      conexion.close();
+    });
+  });
+}
 async function crearViaje(datos){
   return new Promise((resolve, reject)=>{
     var conexion = new sql.Connection(sqlConfig);//Se conecta a la base de datos.
     conexion.connect()
     .then(function() {  //En caso de conectarse exitosamente, ejecuta esta función.
       var request = new sql.Request(conexion); //Crea un nuevo request.
-      request.input("nombre_usuario", sql.VarChar(15), datos.nombre_usuario);
+      request.input("nombre_usuario", sql.NVarChar(15), datos.nombre_usuario);
       request.input("id_vehiculo", sql.Int , datos.id_vehiculo);
       request.input("latitud_destino", sql.Decimal(12,9) , datos.latitud_destino);
       request.input("longitud_destino", sql.Decimal(12,9) , datos.longitud_destino);
@@ -130,6 +152,156 @@ async function eliminarViaje(id_viaje){
       request.input("id_viaje", sql.Int , id_viaje);
 
       request.execute("SP_EliminarViaje")
+      .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
+          resolve(result);
+          conexion.close();
+      })
+      .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
+          reject({error:error.message});
+          conexion.close();
+      });
+    })
+    .catch(function(error){ //Si la conexión falla, ejecuta esta función.
+      reject({error:"No se ha podido conectar con la base de datos"});
+      conexion.close();
+    });
+  });
+}
+async function verViaje(nombre_usuario, id_viaje){
+  return new Promise((resolve, reject)=>{
+    var conexion = new sql.Connection(sqlConfig);//Se conecta a la base de datos.
+    conexion.connect()
+    .then(function() {  //En caso de conectarse exitosamente, ejecuta esta función.
+      var request = new sql.Request(conexion); //Crea un nuevo request.
+      
+      request.input("nombre_usuario", sql.NVarChar(15), nombre_usuario);
+      request.input("id_viaje", sql.Int , id_viaje);
+
+      request.execute("SP_VerViaje")
+      .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
+          resolve(result);
+          conexion.close();
+      })
+      .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
+          reject({error:error.message});
+          conexion.close();
+      });
+    })
+    .catch(function(error){ //Si la conexión falla, ejecuta esta función.
+      reject({error:"No se ha podido conectar con la base de datos"});
+      conexion.close();
+    });
+  });
+}
+async function verViajeHistorico(nombre_usuario, id_viajeHistorico){
+  return new Promise((resolve, reject)=>{
+    var conexion = new sql.Connection(sqlConfig);//Se conecta a la base de datos.
+    conexion.connect()
+    .then(function() {  //En caso de conectarse exitosamente, ejecuta esta función.
+      var request = new sql.Request(conexion); //Crea un nuevo request.
+      
+      request.input("nombre_usuario", sql.NVarChar(15), nombre_usuario);
+      request.input("id_viajeHistorico", sql.BigInt , id_viajeHistorico);
+
+      request.execute("SP_VerViajeHistorico")
+      .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
+          resolve(result);
+          conexion.close();
+      })
+      .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
+          reject({error:error.message});
+          conexion.close();
+      });
+    })
+    .catch(function(error){ //Si la conexión falla, ejecuta esta función.
+      reject({error:"No se ha podido conectar con la base de datos"});
+      conexion.close();
+    });
+  });
+}
+async function reservarViaje(nombre_usuario_pasajero, id_punto_reunion, id_viaje){
+  return new Promise((resolve, reject)=>{
+    var conexion = new sql.Connection(sqlConfig);//Se conecta a la base de datos.
+    conexion.connect()
+    .then(function() {  //En caso de conectarse exitosamente, ejecuta esta función.
+      var request = new sql.Request(conexion); //Crea un nuevo request.
+      
+      request.input("nombre_usuario_pasajero", sql.NVarChar(15), nombre_usuario_pasajero);
+      request.input("id_viaje", sql.Int , id_viaje);
+      request.input("id_punto_reunion", sql.Int , id_punto_reunion);
+
+      request.execute("SP_ReservarViaje")
+      .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
+          resolve(result);
+          conexion.close();
+      })
+      .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
+          reject({error:error.message});
+          conexion.close();
+      });
+    })
+    .catch(function(error){ //Si la conexión falla, ejecuta esta función.
+      reject({error:"No se ha podido conectar con la base de datos"});
+      conexion.close();
+    });
+  });
+}
+async function terminarViaje(id_viaje){
+  return new Promise((resolve, reject)=>{
+    var conexion = new sql.Connection(sqlConfig);//Se conecta a la base de datos.
+    conexion.connect()
+    .then(function() {  //En caso de conectarse exitosamente, ejecuta esta función.
+      var request = new sql.Request(conexion); //Crea un nuevo request.
+  
+      request.input("id_viaje", sql.Int , id_viaje);
+
+      request.execute("SP_TerminarViaje")
+      .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
+          resolve(result);
+          conexion.close();
+      })
+      .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
+          reject({error:error.message});
+          conexion.close();
+      });
+    })
+    .catch(function(error){ //Si la conexión falla, ejecuta esta función.
+      reject({error:"No se ha podido conectar con la base de datos"});
+      conexion.close();
+    });
+  });
+}
+async function obtenerViajesHistoricosPasajero(nombre_usuario){
+  return new Promise((resolve, reject)=>{
+    var conexion = new sql.Connection(sqlConfig);//Se conecta a la base de datos.
+    conexion.connect()
+    .then(function() {  //En caso de conectarse exitosamente, ejecuta esta función.
+      var request = new sql.Request(conexion); //Crea un nuevo request.
+      request.input("nombre_usuario", sql.VarChar(15), nombre_usuario);
+      request.execute("SP_ObtenerViajesHistoricosPasajero")
+      .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
+          resolve(result);
+          conexion.close();
+      })
+      .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
+          reject({error:error.message});
+          conexion.close();
+      });
+    })
+    .catch(function(error){ //Si la conexión falla, ejecuta esta función.
+      reject({error:"No se ha podido conectar con la base de datos"});
+      conexion.close();
+    });
+  });
+}
+async function obtenerViajesHistoricosConductor(nombre_usuario){
+  return new Promise((resolve, reject)=>{
+    var conexion = new sql.Connection(sqlConfig);//Se conecta a la base de datos.
+    conexion.connect()
+    .then(function() {  //En caso de conectarse exitosamente, ejecuta esta función.
+      var request = new sql.Request(conexion); //Crea un nuevo request.
+      request.input("nombre_usuario", sql.VarChar(15), nombre_usuario);
+      request.execute("SP_ObtenerViajesHistoricosConductor")
       .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
           resolve(result);
           conexion.close();
@@ -413,6 +585,7 @@ async function obtenerFavoritos(nombre_usuario){
       });
     })
     .catch(function(error){ //Si la conexión falla, ejecuta esta función.
+      console.log(error);
       reject({error:"No se ha podido conectar con la base de datos"});
       conexion.close();
     });
@@ -451,6 +624,32 @@ async function eliminarFavorito(nombre_usuario_usuario, nombre_usuario_favorito)
       request.input("nombre_usuario_usuario", sql.VarChar(15), nombre_usuario_usuario);
       request.input("nombre_usuario_favorito", sql.VarChar(15), nombre_usuario_favorito);
       request.execute("SP_EliminarFavorito")
+      .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
+          resolve(result);
+          conexion.close();
+      })
+      .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
+          reject({error:error.message});
+          conexion.close();
+      });
+    })
+    .catch(function(error){ //Si la conexión falla, ejecuta esta función.
+      reject({error: "No se ha podido conectar con la base de datos"});
+      conexion.close();
+    });
+  });
+}
+
+async function aceptarRechazarPasajero(id_viaje, nombre_usuario_pasajero, confirmado){
+  return new Promise((resolve, reject)=>{
+    var conexion = new sql.Connection(sqlConfig);//Se conecta a la base de datos.
+    conexion.connect()
+    .then(function() {  //En caso de conectarse exitosamente, ejecuta esta función.
+      var request = new sql.Request(conexion); //Crea un nuevo request.
+      request.input("id_viaje", sql.Int, id_viaje);
+      request.input("nombre_usuario_pasajero", sql.NVarChar(15), nombre_usuario_pasajero);
+      request.input("confirmado", sql.Bit, confirmado);
+      request.execute("SP_AceptarRechazarPasajero")
       .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
           resolve(result);
           conexion.close();
@@ -550,6 +749,30 @@ async function buscarUsuario(nombre_usuario, datos){ //Obtiene todos los usuario
       request.input("nombre_usuario", sql.VarChar(15), nombre_usuario);
       request.input("datos", sql.VarChar(100), datos);
       request.execute("SP_BuscarUsuario")
+      .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
+          resolve(result);
+          conexion.close();
+      })
+      .catch(function(error){ //Si el request no termina exitosamente, ejecuta esta función.
+          reject({error:error.message});
+          conexion.close();
+      });
+    })
+    .catch(function(error){ //Si la conexión falla, ejecuta esta función.
+      reject({error:"No se ha podido conectar con la base de datos"});
+      conexion.close();
+    });
+  });
+}
+
+async function buscarViaje(nombre_usuario){ 
+  return new Promise((resolve, reject)=>{
+    var conexion = new sql.Connection(sqlConfig);//Se conecta a la base de datos.
+    conexion.connect()
+    .then(function() {  //En caso de conectarse exitosamente, ejecuta esta función.
+      var request = new sql.Request(conexion); //Crea un nuevo request.
+      request.input("nombre_usuario", sql.VarChar(15), nombre_usuario);
+      request.execute("SP_BuscarViaje")
       .then(function(result) { //Si el request se ejecuta exitosamente, ejecuta esta función.
           resolve(result);
           conexion.close();
@@ -1006,6 +1229,19 @@ app.post('/api/buscarUsuario', function (req, res) { //Retorna los resultados de
     res.json(error);
   }
 });
+app.post('/api/buscarViaje', function (req, res) { //Retorna los resultados de los usuario que coincidan con los datos de búsqueda
+  try{
+    var datos = req.body;
+    buscarViaje(datos.nombre_usuario).then(function(viajes) {
+      res.json(viajes[0]);
+    }).catch(function(error){
+      res.json(error);
+    });
+  }catch(error){
+    res.json(error);
+  }
+});
+
 
 app.post('/api/obtenerDatosUsuario', function (req, res) {
   try{
@@ -1069,12 +1305,106 @@ app.get('/api/viaje/:nombre_usuario', function (req, res) {
     res.json(error);
   }
 });
+app.get('/api/verViaje/:nombre_usuario&:id_viaje', function (req, res) {
+  try{
+    verViaje(req.params.nombre_usuario, req.params.id_viaje).then(function(datos) {
+      res.json(datos);
+    }).catch(function(error){
+      res.json(error);
+    });
+  }catch(error){
+    res.json(error);
+  }
+});
+app.post('/api/reservarViaje', function (req, res) {
+  try{
+    var datos = req.body;
+    reservarViaje(datos.nombre_usuario_pasajero, datos.id_punto_reunion, datos.id_viaje).then(function(respuesta) {
+      res.json(respuesta);
+    }).catch(function(error){
+      res.json(error);
+    });
+  }catch(error){
+    res.json(error);
+  }
+});
+
+//VIAJEPENDIENTE
+app.get('/api/viajePendiente/:nombre_usuario', function (req, res) {
+  try{
+    obtenerViajesPendientes(req.params.nombre_usuario).then(function(viajes) {
+      res.json(viajes[0]);
+    }).catch(function(error){
+      res.json(error);
+    });
+  }catch(error){
+    res.json(error);
+  }
+});
+app.post('/api/pasajero/', function (req, res) {
+  try{
+    aceptarRechazarPasajero(req.body.id_viaje, req.body.nombre_usuario_pasajero, req.body.confirmado).then(function(datos) {
+      res.json(datos);
+    }).catch(function(error){
+      res.json(error);
+    });
+  }catch(error){
+    res.json(error);
+  }
+});
 
 app.post('/api/puntoReunion', function (req, res) {
   try{
     var datos = req.body;
     crearPuntoReunion(datos).then(function(respuesta) {
       res.json(respuesta);
+    }).catch(function(error){
+      res.json(error);
+    });
+  }catch(error){
+    res.json(error);
+  }
+});
+
+//VIAJEHISTORICO
+app.post('/api/viajeHistorico', function (req, res) {
+  try{
+    var datos = req.body;
+    terminarViaje(datos.id_viaje).then(function(respuesta) {
+      res.json(respuesta);
+    }).catch(function(error){
+      res.json(error);
+    });
+  }catch(error){
+    res.json(error);
+  }
+});
+app.get('/api/verViajeHistorico/:nombre_usuario&:id_viajeHistorico', function (req, res) {
+  try{
+    verViajeHistorico(req.params.nombre_usuario, req.params.id_viajeHistorico).then(function(datos) {
+      res.json(datos);
+    }).catch(function(error){
+      res.json(error);
+    });
+  }catch(error){
+    res.json(error);
+  }
+});
+app.get('/api/viajesHistoricosPasajero/:nombre_usuario', function (req, res) {
+  try{
+    obtenerViajesHistoricosPasajero(req.params.nombre_usuario).then(function(viajes) {
+      res.json(viajes[0]);
+    }).catch(function(error){
+      res.json(error);
+    });
+  }catch(error){
+    res.json(error);
+  }
+});
+app.get('/api/viajesHistoricosConductor/:nombre_usuario', function (req, res) {
+  try{
+    obtenerViajesHistoricosConductor(req.params.nombre_usuario).then(function(viajes) {
+      res.json(viajes[0]);
     }).catch(function(error){
       res.json(error);
     });
