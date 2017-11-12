@@ -10,6 +10,9 @@ import { RouteHandler } from './app.routes';
 //ANGULAR MATERIAL MODULES
 import { MatButtonModule, MatInputModule, MatIconModule } from '@angular/material';
 
+//COMMON COMPONENTS IMPORTS
+import { HeaderComponent } from './common';
+
 //APP COMPONENTS IMPORTS
 import { LoginComponent } from './login/login.component';
 import {
@@ -30,6 +33,8 @@ import { AppService } from './services/app.service';
     DashboardComponent, ArchivedReport, ClosedReport, NewReport,
     AddAdministrator, EditAdministrator, RemoveAdministrator,
     FuelSettings,
+
+    HeaderComponent,
 
   ],
   imports: [
