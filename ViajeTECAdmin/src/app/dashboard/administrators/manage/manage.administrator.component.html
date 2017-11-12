@@ -1,0 +1,58 @@
+<div class="administrator manage">
+  <div class="container">
+    <header title="administrators" subTitle="manage administrators"></header>
+
+    <div class="row" *ngIf="active">
+      <div class="col-md-3 administrators">
+        <div class="admin-container">
+          <a class="admin" [class.active]="admin == active" *ngFor="let admin of administrators" (click)="active = admin">
+            <h4 class="name">{{ admin.name }} {{ admin.lastname }}</h4>
+            <mat-icon class="icon">chevron_right</mat-icon>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-9 content">
+        <div class="row inputs first">
+          <h4 class="subsection margin">Administrator Basic Data</h4>
+          <div class="col-md-6 text-center">
+            <mat-form-field class="input two-thirds">
+              <input matInput placeholder="Name" [(ngModel)]="active.name" required>
+            </mat-form-field>
+            <mat-form-field class="input two-thirds">
+              <input matInput placeholder="Lastname" [(ngModel)]="active.lastname" required>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6 text-center">
+            <mat-form-field class="input two-thirds">
+              <input matInput placeholder="Email" [(ngModel)]="active.email" required>
+            </mat-form-field>
+            <mat-form-field class="input two-thirds">
+              <input matInput placeholder="Confirm Email" [(ngModel)]="confirmEmail" required>
+            </mat-form-field>    
+          </div>
+        </div>
+    
+        <div class="row inputs">
+          <h4 class="subsection margin">Password</h4>
+          <div class="col-md-6 text-center">
+            <mat-form-field class="input two-thirds">
+              <input matInput placeholder="Password" [(ngModel)]="password" required>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6 text-center">
+            <mat-form-field class="input two-thirds">
+              <input matInput placeholder="Confirm Password" [(ngModel)]="confirmPassword" required>
+            </mat-form-field>  
+          </div>
+        </div>
+
+        <div class="text-center">
+          <button mat-raised-button color="primary" (click)="editAdmin ()">Confirm New Data</button>
+        </div>
+      </div>
+
+      <button class="btn delete" mat-button color="accent" (click)="removeAdmin ()">Delete This Administrator</button>
+    </div>
+  </div>
+</div>

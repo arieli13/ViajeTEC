@@ -19,3 +19,12 @@ a, button {
   margin-right: 0;
   margin-left: 0;
 }
+
+.subsection {
+  color: $medium-gray;
+  font-weight: 300;
+
+  &.margin {
+    margin-left: 1em;
+  }
+}

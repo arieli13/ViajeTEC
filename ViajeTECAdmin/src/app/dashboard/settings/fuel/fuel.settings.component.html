@@ -1,5 +1,31 @@
 <div class="settings fuel">
   <div class="container">
     <header title="settings" subTitle="fuel settings"></header>
+
+    <div class="row content">
+      <div class="col-md-4 text-center">
+        <h4 class="subsection">Super Price</h4>
+        <mat-form-field class="input two-thirds">
+          <input matInput placeholder="Price" [(ngModel)]="fuelPrices.super" required>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="editPrice ( 'super', fuelPrices.super )">Confirm New Price</button>
+      </div>
+
+      <div class="col-md-4 text-center">
+        <h4 class="subsection">Regular Price</h4>
+        <mat-form-field class="input two-thirds">
+          <input matInput placeholder="Price" [(ngModel)]="fuelPrices.regular" required>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="editPrice ( 'regular', fuelPrices.regular )">Confirm New Price</button>
+      </div>
+
+      <div class="col-md-4 text-center">
+        <h4 class="subsection">Diesel Price</h4>
+        <mat-form-field class="input two-thirds">
+          <input matInput placeholder="Price" [(ngModel)]="fuelPrices.diesel" required>
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="editPrice ( 'diesel', fuelPrices.diesel )">Confirm New Price</button>
+      </div>
+    </div>
   </div>
 </div>
