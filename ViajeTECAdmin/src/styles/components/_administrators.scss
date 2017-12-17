@@ -1,0 +1,58 @@
+.administrator {
+  .inputs {
+    margin: 2em 0;
+  }
+
+  .btn.delete {
+    position: absolute;
+    bottom: 1em;
+    right: 0;
+  }
+
+  &.manage {
+    .administrators {
+      border-right: .1em solid $light-gray;
+      min-height: calc(100vh - 11em);
+      padding-left: 0;
+      margin-top: 2em;
+
+      .admin-container {
+        .admin {
+          padding: .2em .4em .2em .4em;
+          margin-bottom: .2em;
+          border-radius: .2em;
+          color: $medium-gray;
+          position: relative;
+          display: flex;
+          width: 100%;
+
+          &:hover {
+            background-color: $background;
+          }
+
+          &.active {
+            background-color: $light-gray;
+            transition: .125s ease-in;
+            color: $blue;
+          }
+
+          .name {
+            font-weight: 300;
+          }
+
+          .icon {
+            position: absolute;
+            top: .45em;
+            right: 0;
+          }
+        }
+      }
+    }
+
+    .content {
+      .inputs.first {
+        margin-top: 1em;
+      }
+    }
+  }
+}

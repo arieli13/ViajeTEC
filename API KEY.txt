@@ -1,0 +1,8 @@
+-> android\app\src\main\AndroidManifest.xml 
+-> línea 32, ahí va el API KEY
+
+
+---------------------------------
+
+-> App\Clases\GoogleWebService.js
+-> Línea 34, al final del url después del KEY=, se ingresa el KEY

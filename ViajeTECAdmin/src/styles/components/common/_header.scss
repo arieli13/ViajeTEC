@@ -1,0 +1,23 @@
+.header {
+  border-bottom: .1em solid $light-gray;
+  margin-top: .5em;
+  display: flex;
+
+  .title {
+    color: $medium-gray;
+    margin-left: 1em;
+    
+    &::after {
+      margin: 0 .7em;
+      content: "|";
+    }
+  }
+
+  .subTitle {
+    text-transform: uppercase;
+    position: relative;
+    font-weight: 300;
+    color: $blue;
+    top: -.16em;
+  }
+}

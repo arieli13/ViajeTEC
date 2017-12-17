@@ -11,7 +11,6 @@
     padding: 1em;
 
     .container {
-      border-left: .5em solid $blue;
       background-color: white;
       border-radius: .2em;
       position: relative;
@@ -26,6 +25,7 @@
 
     .title-container {
       border-top-right-radius: .2em;
+      border-top-left-radius: .2em;
       background-color: $blue;
       position: absolute;
       color: white;

@@ -11,8 +11,7 @@ export const menuLinks = [
     title: 'Administrators',
     links: [
       { title: 'Add Administrator', icon: 'add_circle' },
-      { title: 'Edit Administrator', icon: 'mode_edit' },
-      { title: 'Remove Administrator', icon: 'remove_circle' },
+      { title: 'Manage Administrators', icon: 'mode_edit' },
     ]
   },
   {

@@ -8,14 +8,16 @@ import { AppComponent } from './app.component';
 import { RouteHandler } from './app.routes';
 
 //ANGULAR MATERIAL MODULES
-import { MatButtonModule, MatInputModule, MatIconModule } from '@angular/material';
+import { MatButtonModule, MatInputModule, MatIconModule, MatSnackBarModule } from '@angular/material';
+
+//COMMON COMPONENTS IMPORTS
+import { HeaderComponent } from './common';
 
 //APP COMPONENTS IMPORTS
 import { LoginComponent } from './login/login.component';
 import {
   DashboardComponent, ArchivedReport, ClosedReport, NewReport,
-  AddAdministrator, EditAdministrator, RemoveAdministrator,
-  FuelSettings
+  AddAdministrator, ManageAdministrator, FuelSettings
 } from './dashboard'
 
 //APP SERVICES IMPORTS
@@ -28,15 +30,16 @@ import { AppService } from './services/app.service';
 
     LoginComponent,
     DashboardComponent, ArchivedReport, ClosedReport, NewReport,
-    AddAdministrator, EditAdministrator, RemoveAdministrator,
-    FuelSettings,
+    AddAdministrator, ManageAdministrator, FuelSettings,
+
+    HeaderComponent,
 
   ],
   imports: [
     BrowserAnimationsModule, BrowserModule, FormsModule,
 
     //Angular Material Modules
-    MatButtonModule, MatInputModule, MatIconModule,
+    MatButtonModule, MatInputModule, MatIconModule, MatSnackBarModule,
 
     RouterModule.forRoot (
       RouteHandler, { useHash: false, preloadingStrategy: PreloadAllModules }

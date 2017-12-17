@@ -1,1 +1,44 @@
-add
+<div class="administrator add">
+  <div class="container">
+    <header title="administrators" subTitle="add administrator"></header>
+
+    <div class="row inputs">
+      <h4 class="subsection margin">Administrator Basic Data</h4>
+      <div class="col-md-6 text-center">
+        <mat-form-field class="input two-thirds">
+          <input matInput placeholder="Name" [(ngModel)]="name" required>
+        </mat-form-field>
+        <mat-form-field class="input two-thirds">
+          <input matInput placeholder="Lastname" [(ngModel)]="lastname" required>
+        </mat-form-field>
+      </div>
+      <div class="col-md-6 text-center">
+        <mat-form-field class="input two-thirds">
+          <input matInput placeholder="Email" [(ngModel)]="email" required>
+        </mat-form-field>
+        <mat-form-field class="input two-thirds">
+          <input matInput placeholder="Confirm Email" [(ngModel)]="confirmEmail" required>
+        </mat-form-field>    
+      </div>
+    </div>
+
+    <div class="row inputs">
+      <h4 class="subsection margin">Contraseña</h4>
+      <div class="col-md-6 text-center">
+        <mat-form-field class="input two-thirds">
+          <input matInput placeholder="Password" [(ngModel)]="password" required>
+        </mat-form-field>
+      </div>
+      <div class="col-md-6 text-center">
+        <mat-form-field class="input two-thirds">
+          <input matInput placeholder="Confirm Password" [(ngModel)]="confirmPassword" required>
+        </mat-form-field>  
+      </div>
+    </div>
+
+    <div class="text-center">
+      <button mat-raised-button color="primary" (click)="addAdmin (name, lastname, email)">Create New Administrator</button>
+    </div>
+
+  </div>
+</div>

@@ -1,5 +1,5 @@
 //https://developers.google.com/maps/documentation/distance-matrix/intro?hl=es-419
-//
+//Línea 34, en el URL después del key= poner el KEY
 
 export default class GWS{
     static obtenerNombre(latitud, longitud){
@@ -31,7 +31,7 @@ export default class GWS{
     static obtenerDistancia(lat1, lon1, lat2, lon2){
         //https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=9.449062, -84.023436&destinations=9.449442, -84.023321&key=AIzaSyCbXwGwLjBx_ARPhbLz7kN3DkOggArKKhQ
         return new Promise((resolve, reject)=>{
-            var direccion = 'https:maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins='+String(lat1)+','+String(lon1)+'&destinations='+String(lat2)+','+String(lon2)+'&key=AIzaSyCbXwGwLjBx_ARPhbLz7kN3DkOggArKKhQ';
+            var direccion = 'https:maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins='+String(lat1)+','+String(lon1)+'&destinations='+String(lat2)+','+String(lon2)+'&key=';
             fetch(direccion,{
                 method: 'POST',
                 headers: {
